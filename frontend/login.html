@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aula Digital | Iniciar Sesión</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<div class="login-container">
+    <!-- Panel izquierdo -->
+    <div class="login-info">
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h1>Mi Aula Digital</h1>
+        </div>
+        <h2>Bienvenido</h2>
+        <p>
+            Plataforma de gestión escolar para el control de alumnos,
+            docentes, materias, citas, avisos y registros diarios.
+        </p>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fa-solid fa-user-graduate"></i>
+                <span>Administración de alumnos</span>
+            </div>
+            <div class="feature">
+                <i class="fa-solid fa-book"></i>
+                <span>Control de materias</span>
+            </div>
+            <div class="feature">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>Gestión de citas</span>
+            </div>
+            <div class="feature">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Seguimiento académico</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="login-form-container">
+        <form id="loginForm" class="login-form">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">
+                Ingresa tus credenciales para acceder al sistema
+            </p>
+            <div class="input-group">
+                <label>Tipo de Usuario</label>
+                <select id="tipoUsuario" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="docente">Docente</option>
+                    <option value="alumno">Alumno</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Usuario</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <input
+                        type="text"
+                        id="usuario"
+                        placeholder="Ingrese su usuario"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Contraseña</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-lock"></i>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Ingrese su contraseña"
+                        required
+                    >
+                </div>
+            </div>
+            <button type="submit" class="btn-login">
+                Ingresar
+            </button>
+            <p class="help-text">
+                Docentes: usar ID y contraseña registrada.<br>
+                Alumnos: usar ID y fecha de nacimiento.
+            </p>
+        </form>
+    </div>
+</div>
+<script src="js/login.js"></script>
+</body>
+</html>

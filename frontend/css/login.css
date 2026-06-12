@@ -1,0 +1,298 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+    );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+
+.login-container {
+    width: 100%;
+    max-width: 1100px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    background: white;
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.2);
+}
+
+/* =========================
+   PANEL IZQUIERDO
+========================= */
+
+.login-info {
+    background: linear-gradient(
+        135deg,
+        #38bdf8,
+        #0ea5e9
+    );
+
+    color: white;
+
+    padding: 60px 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    margin-bottom: 40px;
+}
+
+.logo i {
+    font-size: 50px;
+}
+
+.logo h1 {
+    font-size: 32px;
+}
+
+.login-info h2 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.login-info p {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 35px;
+}
+
+/* =========================
+   FEATURES
+========================= */
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: rgba(255,255,255,.15);
+
+    padding: 14px;
+    border-radius: 12px;
+}
+
+.feature i {
+    font-size: 20px;
+}
+
+/* =========================
+   PANEL DERECHO
+========================= */
+
+.login-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 50px;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-form h2 {
+    font-size: 32px;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.input-group select,
+.input-group input {
+    width: 100%;
+    padding: 14px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+
+    outline: none;
+
+    transition: .3s;
+}
+
+.input-group select:focus,
+.input-group input:focus {
+    border-color: #38bdf8;
+    box-shadow:
+        0 0 0 3px rgba(56,189,248,.2);
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+
+    left: 15px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+}
+
+.input-icon input {
+    padding-left: 45px;
+}
+
+/* =========================
+   BOTÓN
+========================= */
+
+.btn-login {
+    width: 100%;
+
+    border: none;
+
+    background: #38bdf8;
+    color: white;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+.btn-login:hover {
+    background: #0ea5e9;
+}
+
+/* =========================
+   TEXTO INFERIOR
+========================= */
+
+.help-text {
+    text-align: center;
+
+    margin-top: 20px;
+
+    color: #64748b;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+    .login-container {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .login-info {
+
+        padding: 40px;
+
+    }
+
+    .login-info h2 {
+
+        font-size: 30px;
+
+    }
+
+    .login-form-container {
+
+        padding: 35px;
+
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .login-info {
+
+        padding: 30px 25px;
+
+    }
+
+    .login-form-container {
+
+        padding: 25px;
+
+    }
+
+    .logo h1 {
+
+        font-size: 24px;
+
+    }
+
+    .login-info h2 {
+
+        font-size: 26px;
+
+    }
+
+}

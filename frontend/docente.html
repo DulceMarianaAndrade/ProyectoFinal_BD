@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aula Digital | Docente</title>
+    <link rel="stylesheet" href="css/docente.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h2>Mi Aula Digital</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li class="menu-item active" data-view="dashboard">
+                        <i class="fa-solid fa-house"></i>
+                        Dashboard
+                    </li>
+                    <li class="menu-item" data-view="alumnos">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        Alumnos
+                    </li>
+                    <li class="menu-item" data-view="docentes">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        Docentes
+                    </li>
+                    <li class="menu-item" data-view="tutores">
+                        <i class="fa-solid fa-users"></i>
+                        Tutores
+                    </li>
+                    <li class="menu-item" data-view="grupos">
+                        <i class="fa-solid fa-layer-group"></i>
+                        Grupos
+                    </li>
+                    <li class="menu-item" data-view="materias">
+                        <i class="fa-solid fa-book"></i>
+                        Materias
+                    </li>
+                    <li class="menu-item" data-view="calificaciones">
+                        <i class="fa-solid fa-chart-column"></i>
+                        Calificaciones
+                    </li>
+                    <li class="menu-item" data-view="avisos">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        Avisos
+                    </li>
+                    <li class="menu-item" data-view="citas">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Citas
+                    </li>
+                    <li class="menu-item" data-view="registros">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Registro Diario
+                    </li>
+                </ul>
+            </nav>
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+            </button>
+        </aside>
+
+        <!-- CONTENIDO -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+                <div class="user-info">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="nombreDocente">
+                        Docente
+                    </span>
+                </div>
+            </header>
+
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="view active">
+                <div class="cards">
+                    <div class="card">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <h3 id="totalAlumnos">0</h3>
+                        <p>Alumnos</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <h3 id="totalDocentes">0</h3>
+                        <p>Docentes</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <h3 id="totalGrupos">0</h3>
+                        <p>Grupos</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-book"></i>
+                        <h3 id="totalMaterias">0</h3>
+                        <p>Materias</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ALUMNOS -->
+            <section id="alumnos" class="view">
+                <div class="section-header">
+                    <h2>Gestión de Alumnos</h2>
+                    <button class="btn-primary" id="btnNuevoAlumno">
+                        Nuevo Alumno
+                    </button>
+                    <button class="btn-primary" id="btnModificarAlumno">
+                        Modificar Alumno
+                    </button>
+                    <button class="btn-delete" id="btnEliminarAlumno">
+                        Eliminar Alumno
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Alumno</th>
+                            <th>ID Grupo</th>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Fecha de nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAlumno">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- DOCENTES -->
+            <section id="docentes" class="view">
+                <div class="section-header">
+                    <h2>Gestión de Docentes</h2>
+                    <button class="btn-primary" id="btnNuevoDocente">
+                        Nuevo Docente
+                    </button>
+                    <button class="btn-primary" id="btnModificarDocente">
+                        Modificar Docente
+                    </button>
+                    <button class="btn-delete" id="btnEliminarDocente">
+                        Eliminar Docente
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Contraseña</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaDocente">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- TUTORES -->
+            <section id="tutores" class="view">
+                <div class="section-header">
+                    <h2>Tutores</h2>
+                    <button class="btn-primary" id="btnNuevoTutor">
+                        Nuevo Tutor
+                    </button>
+                    <button class="btn-primary" id="btnModificarTutor">
+                        Modificar Tutor
+                    </button>
+                    <button class="btn-delete" id="btnEliminarTutor">
+                        Eliminar Tutor
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaTutor">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- GRUPOS -->
+            <section id="grupos" class="view">
+                <div class="section-header">
+                    <h2>Grupos</h2>
+                    <button class="btn-primary" id="btnNuevoGrupo">
+                        Nuevo Grupo
+                    </button>
+                    <button class="btn-primary" id="btnModificarGrupo">
+                        Modificar Grupo
+                    </button>
+                    <button class="btn-delete" id="btnEliminarGrupo">
+                        Eliminar Grupo
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Grupo</th>
+                            <th>ID Docente</th>
+                            <th>Grado</th>
+                            <th>Grupo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaGrupo">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- MATERIAS -->
+            <section id="materias" class="view">
+                <div class="section-header">
+                    <h2>Materias</h2>
+                    <button class="btn-primary" id="btnNuevaMateria">
+                        Nueva Materia
+                    </button>
+                    <button class="btn-primary" id="btnModificarMateria">
+                        Modificar Materia
+                    </button>
+                    <button class="btn-delete" id="btnEliminarMateria">
+                        Eliminar Materia
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Materia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaMateria">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- CALIFICACIONES -->
+            <section id="calificaciones" class="view">
+                <div class="section-header">
+                    <h2>Calificaciones</h2>
+                    <button class="btn-primary" id="btnNuevaCalificacion">
+                        Nueva Calificación
+                    </button>
+                    <button class="btn-primary" id="btnModificarCalificacion">
+                        Modificar Calificación
+                    </button>
+                    <button class="btn-delete" id="btnEliminarCalificacion">
+                        Eliminar Calificación
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id Alumno</th>
+                            <th>Id Materia</th>
+                            <th>Calificación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCursar">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- AVISOS -->
+            <section id="avisos" class="view">
+                <div class="section-header">
+                    <h2>Avisos</h2>
+                    <button class="btn-primary" id="btnNuevoAviso">
+                        Nuevo Aviso
+                    </button>
+                    <button class="btn-primary" id="btnModificarAviso">
+                        Modificar Aviso
+                    </button>
+                    <button class="btn-delete" id="btnEliminarAviso">
+                        Eliminar Aviso
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Aviso</th>
+                            <th>ID Docente</th>
+                            <th>Título</th>
+                            <th>Mensaje</th>
+                            <th>Fecha</th>
+                            <th>Categoría</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAviso">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- CITAS -->
+            <section id="citas" class="view">
+                <div class="section-header">
+                    <h2>Citas</h2>
+                    <button class="btn-primary" id="btnAgendarCita">
+                        Agendar Cita
+                    </button>
+                    <button class="btn-primary" id="btnModificarCita">
+                        Modificar Cita
+                    </button>
+                    <button class="btn-delete" id="btnEliminarCita">
+                        Eliminar Cita
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Cita</th>
+                            <th>ID Docente</th>
+                            <th>ID Tutor</th>
+                            <th>Hora</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCita">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- REGISTRO DIARIO -->
+            <section id="registros" class="view">
+                <div class="section-header">
+                    <h2>Registro Diario</h2>
+                    <button class="btn-primary" id="btnNuevoRegistro">
+                        Nuevo registro
+                    </button>
+                    <button class="btn-primary" id="btnModificarRegistro">
+                        Modificar registro
+                    </button>
+                    <button class="btn-delete" id="btnEliminarRegistro">
+                        Eliminar registro
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Registro</th>
+                            <th>ID Alumno</th>
+                            <th>Comportamiento</th>
+                            <th>Asistencia</th>
+                            <th>Fecha</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaRegistro">
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+
+            <span id="cerrarModal" class="close">
+                &times;
+            </span>
+
+            <h2 id="modalTitulo">
+                Formulario
+            </h2>
+
+            <form id="formModal">
+
+                <div id="camposModal"></div>
+
+                <button type="submit" class="btn-primary">
+                    Guardar
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+    <script src="js/docente.js"></script>
+</body>
+</html>

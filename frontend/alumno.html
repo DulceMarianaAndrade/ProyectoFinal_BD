@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aula Digital | Alumno</title>
+    <link rel="stylesheet" href="css/alumno.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h2>Mi Aula Digital</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li class="menu-item active" data-view="inicio">
+                        <i class="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li class="menu-item" data-view="materias">
+                        <i class="fa-solid fa-book"></i>
+                        Materias
+                    </li>
+                    <li class="menu-item" data-view="calificaciones">
+                        <i class="fa-solid fa-chart-column"></i>
+                        Calificaciones
+                    </li>
+                    <li class="menu-item" data-view="avisos">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        Avisos
+                    </li>
+                    <li class="menu-item" data-view="citas">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Citas
+                    </li>
+                    <li class="menu-item" data-view="registros">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Registro Diario
+                    </li>
+                </ul>
+            </nav>
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+            </button>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1 id="pageTitle">
+                    Inicio
+                </h1>
+                <div class="user-info">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="nombreAlumno">
+                        Alumno
+                    </span>
+                </div>
+            </header>
+
+            <!-- INICIO -->
+            <section id="inicio" class="view active">
+                <div class="cards">
+                    <div class="card">
+                        <i class="fa-solid fa-book"></i>
+                        <h3 id="totalMaterias">
+                            0
+                        </h3>
+                        <p>Materias</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <h3 id="promedioGeneral">
+                            0
+                        </h3>
+                        <p>Promedio General</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <h3 id="asistencias">
+                            0
+                        </h3>
+                        <p>Asistencias</p>
+                    </div>
+                </div>
+            </section>
+
+             <!-- MATERIAS -->
+            <section id="materias" class="view">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Materia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaMateria">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- CALIFICACIONES -->
+            <section id="calificaciones" class="view">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id Alumno</th>
+                            <th>Id Materia</th>
+                            <th>Calificación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCursar">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- AVISOS -->
+            <section id="avisos" class="view">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Aviso</th>
+                            <th>ID Docente</th>
+                            <th>Título</th>
+                            <th>Mensaje</th>
+                            <th>Fecha</th>
+                            <th>Categoría</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAviso">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- CITAS -->
+            <section id="citas" class="view">
+                <div class="section-header">
+                    <h2>Citas</h2>
+                    <button class="btn-primary" id="btnAgendarCita">
+                        Agendar Cita
+                    </button>
+                    <button class="btn-primary" id="btnModificarCita">
+                        Modificar Cita
+                    </button>
+                    <button class="btn-delete" id="btnEliminarCita">
+                        Eliminar Cita
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Cita</th>
+                            <th>ID Docente</th>
+                            <th>ID Tutor</th>
+                            <th>Hora</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCita">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- REGISTRO DIARIO -->
+            <section id="registros" class="view">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Registro</th>
+                            <th>ID Alumno</th>
+                            <th>Comportamiento</th>
+                            <th>Asistencia</th>
+                            <th>Fecha</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaRegistro">
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+        <div id="modal" class="modal">
+        <div class="modal-content">
+
+            <span id="cerrarModal" class="close">
+                &times;
+            </span>
+
+            <h2 id="modalTitulo">
+                Formulario
+            </h2>
+
+            <form id="formModal">
+
+                <div id="camposModal"></div>
+
+                <button type="submit" class="btn-primary">
+                    Guardar
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+    <script src="js/alumno.js"></script>
+</body>
+</html>
