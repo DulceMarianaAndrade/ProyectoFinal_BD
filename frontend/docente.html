@@ -82,31 +82,168 @@
                 </div>
             </header>
 
-            <!-- DASHBOARD -->
             <section id="dashboard" class="view active">
-                <div class="cards">
-                    <div class="card">
-                        <i class="fa-solid fa-user-graduate"></i>
-                        <h3 id="totalAlumnos">0</h3>
-                        <p>Alumnos</p>
-                    </div>
-                    <div class="card">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        <h3 id="totalDocentes">0</h3>
-                        <p>Docentes</p>
-                    </div>
-                    <div class="card">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <h3 id="totalGrupos">0</h3>
-                        <p>Grupos</p>
-                    </div>
-                    <div class="card">
-                        <i class="fa-solid fa-book"></i>
-                        <h3 id="totalMaterias">0</h3>
-                        <p>Materias</p>
-                    </div>
-                </div>
-            </section>
+    <div class="cards">
+        <div class="card">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h3 id="totalAlumnos">0</h3>
+            <p>Alumnos</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <h3 id="totalDocentes">0</h3>
+            <p>Docentes</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-layer-group"></i>
+            <h3 id="totalGrupos">0</h3>
+            <p>Grupos</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-book"></i>
+            <h3 id="totalMaterias">0</h3>
+            <p>Materias</p>
+        </div>
+    </div>
+
+    <div class="query-builder">
+        <h2 class="qb-title">
+            <i class="fa-solid fa-database"></i> Constructor de Consultas
+        </h2>
+
+        <!-- PASO 1: TABLA PRINCIPAL -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">1</span>
+                <span class="qb-label">¿De qué tabla quieres ver datos?</span>
+                <span class="qb-badge" id="b1">ninguna</span>
+            </div>
+            <div class="qb-chips" id="tablasGrid"></div>
+        </div>
+
+        <!-- PASO 2: COMBINAR TABLAS -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">2</span>
+                <span class="qb-label">¿Quieres combinar con otra tabla?</span>
+                <span class="qb-badge">opcional</span>
+            </div>
+            <div id="joinsContainer"></div>
+            <button class="btn-secondary" id="btnAddJoin">
+                <i class="fa-solid fa-plus"></i> Combinar con otra tabla
+            </button>
+        </div>
+
+        <!-- PASO 3: COLUMNAS -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">3</span>
+                <span class="qb-label">¿Qué columnas quieres ver?</span>
+                <span class="qb-badge" id="b3">todas</span>
+            </div>
+            <div class="qb-chips" id="colsGrid"></div>
+            <p class="qb-hint">Si no seleccionas ninguna, se muestran todas.</p>
+        </div>
+
+        <!-- PASO 4: FILTROS -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">4</span>
+                <span class="qb-label">¿Quieres filtrar los resultados?</span>
+                <span class="qb-badge">opcional</span>
+            </div>
+            <div id="filtersContainer"></div>
+            <button class="btn-secondary" id="btnAddFilter">
+                <i class="fa-solid fa-plus"></i> Agregar filtro
+            </button>
+        </div>
+
+        <!-- PASO 5: AGRUPAR -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">5</span>
+                <span class="qb-label">¿Quieres agrupar o contar resultados?</span>
+                <span class="qb-badge">opcional</span>
+            </div>
+            <div class="qb-chips" id="groupGrid"></div>
+            <div class="qb-having" id="havingRow" style="display:none">
+                <span>Mostrar solo grupos donde el conteo</span>
+                <select id="havingOp">
+                    <option value=">">&gt;</option>
+                    <option value="<">&lt;</option>
+                    <option value="=">=</option>
+                </select>
+                <input type="number" id="havingVal" value="1" min="0">
+            </div>
+        </div>
+
+        <!-- PASO 6: ORDENAR -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">6</span>
+                <span class="qb-label">¿Cómo quieres ordenar los resultados?</span>
+                <span class="qb-badge">opcional</span>
+            </div>
+            <div id="orderContainer"></div>
+            <button class="btn-secondary" id="btnAddOrder">
+                <i class="fa-solid fa-plus"></i> Agregar orden
+            </button>
+        </div>
+
+        <!-- PASO 7: LÍMITE -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num">7</span>
+                <span class="qb-label">¿Cuántos resultados quieres ver?</span>
+                <span class="qb-badge" id="b7">50 filas</span>
+            </div>
+            <div class="qb-chips" id="limitGrid">
+                <span class="qb-chip qb-chip-limit" data-val="10">10 filas</span>
+                <span class="qb-chip qb-chip-limit" data-val="25">25 filas</span>
+                <span class="qb-chip qb-chip-limit sel-limit" data-val="50">50 filas</span>
+                <span class="qb-chip qb-chip-limit" data-val="100">100 filas</span>
+                <span class="qb-chip qb-chip-limit" data-val="500">500 filas</span>
+            </div>
+        </div>
+
+        <!-- SQL GENERADO -->
+        <div class="qb-step-block">
+            <div class="qb-step-header">
+                <span class="qb-num" style="background:#1e1e2e">
+                    <i class="fa-solid fa-code" style="font-size:11px"></i>
+                </span>
+                <span class="qb-label">Consulta SQL generada</span>
+            </div>
+            <pre class="qb-sql" id="sqlPreview">-- Elige una tabla para comenzar</pre>
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="qb-actions">
+            <button class="btn-primary" id="btnRun" disabled>
+                <i class="fa-solid fa-play"></i> Consultar
+            </button>
+            <button class="btn-secondary" id="btnClear">
+                <i class="fa-solid fa-broom"></i> Limpiar todo
+            </button>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div id="qbResultados" style="display:none" class="qb-results">
+            <div class="qb-results-header">
+                <span><i class="fa-solid fa-table"></i> Resultados</span>
+                <span class="qb-badge-green" id="qbTotal"></span>
+            </div>
+            <div class="qb-table-scroll">
+                <table id="qbTabla">
+                    <thead id="qbTHead"></thead>
+                    <tbody id="qbTBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="qbError" class="qb-error" style="display:none"></div>
+    </div>
+</section>
 
             <!-- ALUMNOS -->
             <section id="alumnos" class="view">

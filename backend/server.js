@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const queryRoutes = require("./routes/query.routes");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/citas", require("./routes/citas.routes"));
 app.use("/api/registros", require("./routes/registros.routes"));
 app.use("/api/calificaciones", require("./routes/calificaciones.routes"));
 app.use("/api/tutores", require("./routes/tutores.routes"));
+app.use("/api/query", queryRoutes);
 
 const PORT = process.env.PORT || 3000;
 
