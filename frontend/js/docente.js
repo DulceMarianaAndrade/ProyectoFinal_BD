@@ -2030,7 +2030,10 @@ async function qbEjecutar() {
 
         const res = await fetch("http://localhost:3000/api/query/ejecutar", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify(payload)
         });
         const data = await res.json();
@@ -2108,3 +2111,248 @@ function initQueryBuilder() {
 }
 
 document.addEventListener("DOMContentLoaded", initQueryBuilder);
+
+// =========================================================
+// APARTADO DE CONSULTAS (SQL ESTÁTICAS)
+// ---------------------------------------------------------
+// Pide al backend la lista de consultas predefinidas
+// (definidas en query.controller.js) y dibuja una tarjeta
+// por cada una, mostrando: título, descripción, código SQL
+// y un botón "Ejecutar" que trae el resultado real desde la
+// base de datos.
+//
+// Todas las peticiones incluyen el header Authorization con
+// el token JWT, ya que estas rutas están protegidas por el
+// middleware verificarToken + permitirRoles("docente").
+// =========================================================
+
+const GRUPOS_CONSULTAS = {
+    sencilla: "sencillas",
+    agrupada: "agrupadas",
+    having: "having",
+    multitabla: "multitabla"
+};
+
+function obtenerGrupoConsulta(id) {
+    const prefijo = Object.keys(GRUPOS_CONSULTAS).find(p => id.startsWith(p));
+    return GRUPOS_CONSULTAS[prefijo] || "sencillas";
+}
+
+async function cargarConsultasPredefinidas() {
+
+    const contenedores = document.querySelectorAll(".consultas-grid");
+    if (contenedores.length === 0) return;
+
+    try {
+
+        const response = await fetch("http://localhost:3000/api/query/predefinidas", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || "No se pudieron cargar las consultas");
+        }
+
+        const consultas = await response.json();
+
+        consultas.forEach(consulta => {
+
+            const grid = document.querySelector(
+                `.consultas-grid[data-grupo="${obtenerGrupoConsulta(consulta.id)}"]`
+            );
+
+            if (!grid) return;
+
+            const card = document.createElement("div");
+            card.className = "consulta-card";
+
+            card.innerHTML = `
+                <h4>${consulta.titulo}</h4>
+                <p>${consulta.descripcion}</p>
+                <div class="consulta-tablas">
+                    <span class="consulta-tablas-label">Tablas:</span>
+                    ${consulta.tablas.map(t => `<span class="tabla-chip">${t}</span>`).join("")}
+                </div>
+                <pre class="qb-sql">${consulta.sql}</pre>
+                <button class="btn-secondary btn-ejecutar-consulta" data-id="${consulta.id}">
+                    <i class="fa-solid fa-play"></i> Ejecutar consulta
+                </button>
+                <div class="qb-error" style="display:none"></div>
+                <div class="qb-results consulta-resultado">
+                    <div class="qb-results-header">
+                        <span>Resultado</span>
+                        <span class="qb-total"></span>
+                    </div>
+                    <div class="qb-table-scroll">
+                        <table>
+                            <thead class="qb-thead"></thead>
+                            <tbody class="qb-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            grid.appendChild(card);
+
+            card.querySelector(".btn-ejecutar-consulta")
+                .addEventListener("click", () => toggleConsultaPredefinida(consulta.id, card));
+
+        });
+
+    } catch (error) {
+
+        contenedores.forEach(grid => {
+            grid.innerHTML = `<div class="qb-error" style="display:block">⚠ ${error.message}</div>`;
+        });
+
+    }
+
+}
+
+// =========================================================
+// TOGGLE: mostrar/ocultar el resultado al hacer click en el
+// botón "Ejecutar consulta".
+// ---------------------------------------------------------
+// - Si la tarjeta NO tiene resultados cargados todavía,
+//   ejecuta la consulta contra el backend y los muestra.
+// - Si ya tiene resultados visibles, simplemente los oculta
+//   (sin volver a pedirlos al servidor) y regresa el botón
+//   a su estilo normal.
+// - Si ya tiene resultados pero están ocultos, los vuelve a
+//   mostrar sin pedirlos de nuevo.
+// =========================================================
+async function toggleConsultaPredefinida(id, card) {
+
+    const btn = card.querySelector(".btn-ejecutar-consulta");
+    const resultados = card.querySelector(".consulta-resultado");
+
+    const yaCargado = resultados.dataset.cargado === "true";
+
+    if (yaCargado) {
+
+        const visible = resultados.classList.toggle("activo");
+        btn.classList.toggle("activo", visible);
+
+        btn.innerHTML = visible
+            ? '<i class="fa-solid fa-eye-slash"></i> Ocultar resultado'
+            : '<i class="fa-solid fa-play"></i> Ejecutar consulta';
+
+        return;
+
+    }
+
+    await ejecutarConsultaPredefinida(id, card);
+
+}
+
+async function ejecutarConsultaPredefinida(id, card) {
+
+    const btn = card.querySelector(".btn-ejecutar-consulta");
+    const errorBox = card.querySelector(".qb-error");
+    const resultados = card.querySelector(".consulta-resultado");
+    const thead = card.querySelector(".qb-thead");
+    const tbody = card.querySelector(".qb-tbody");
+    const totalEl = card.querySelector(".qb-total");
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ejecutando...';
+    errorBox.style.display = "none";
+
+    try {
+
+        const response = await fetch(`http://localhost:3000/api/query/predefinida/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detalle || data.message || "Error al ejecutar la consulta");
+        }
+
+        thead.innerHTML = "";
+        tbody.innerHTML = "";
+        totalEl.textContent = `${data.total} fila${data.total !== 1 ? "s" : ""}`;
+
+        if (data.resultados.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="99" style="text-align:center;padding:20px;color:#888">Sin resultados</td></tr>';
+        } else {
+
+            const trHead = document.createElement("tr");
+            Object.keys(data.resultados[0]).forEach(col => {
+                const th = document.createElement("th");
+                th.textContent = col;
+                trHead.appendChild(th);
+            });
+            thead.appendChild(trHead);
+
+            data.resultados.forEach(fila => {
+                const tr = document.createElement("tr");
+                Object.values(fila).forEach(val => {
+                    const td = document.createElement("td");
+                    td.textContent = val ?? "NULL";
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+
+        }
+
+        resultados.classList.add("activo");
+        resultados.dataset.cargado = "true";
+
+        btn.classList.add("activo");
+        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Ocultar resultado';
+        btn.disabled = false;
+        return;
+
+    } catch (error) {
+
+        errorBox.textContent = "⚠ " + error.message;
+        errorBox.style.display = "block";
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Ejecutar consulta';
+
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", cargarConsultasPredefinidas);
+
+// =========================================================
+// BOTÓN "VOLVER AL DASHBOARD" (vista de Consultas)
+// ---------------------------------------------------------
+// Reutiliza la misma lógica del menú lateral: quita "active"
+// de todas las vistas y del menú, y activa el Dashboard.
+// =========================================================
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btnVolver = document.getElementById("btnVolverDashboard");
+
+    if (!btnVolver) return;
+
+    btnVolver.addEventListener("click", () => {
+
+        const menuItems = document.querySelectorAll(".menu-item");
+        const views = document.querySelectorAll(".view");
+        const pageTitle = document.getElementById("pageTitle");
+
+        menuItems.forEach(btn => btn.classList.remove("active"));
+        views.forEach(view => view.classList.remove("active"));
+
+        const dashboardMenu = document.querySelector('.menu-item[data-view="dashboard"]');
+        const dashboardView = document.getElementById("dashboard");
+
+        if (dashboardMenu) dashboardMenu.classList.add("active");
+        if (dashboardView) dashboardView.classList.add("active");
+        if (pageTitle) pageTitle.textContent = "Dashboard";
+
+    });
+
+});
