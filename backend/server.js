@@ -20,6 +20,9 @@ app.use("/api/calificaciones", require("./routes/calificaciones.routes"));
 app.use("/api/tutores", require("./routes/tutores.routes"));
 app.use("/api/representar", require("./routes/representar.routes"));
 app.use("/api/query", queryRoutes);
+app.get('/', (req, res) => {
+    res.send('Backend funcionando correctamente');
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
