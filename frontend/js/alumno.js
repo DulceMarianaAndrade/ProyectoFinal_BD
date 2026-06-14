@@ -105,6 +105,10 @@ document
 // =========================
 function cargarVista(view) {
     switch (view) {
+        case "inicio":   
+            cargarInicio();
+            cargarRegistros();
+            break;
         case "grupos":
             cargarGrupos();
             break;
@@ -400,34 +404,26 @@ async function cargarAvisos() {
 // =========================
 
 async function cargarCitas() {
-
     try {
+        // Primero obtén el tutor del alumno
+        const repResponse = await fetch(
+            `http://localhost:3000/api/representar/alumno/${usuario.Id_Alumno}`
+        );
+        const representar = await repResponse.json();
 
-        const response =
-            await fetch(
-                "http://localhost:3000/api/citas",
-                {
-                    headers: {
-                        Authorization:
-                            `Bearer ${token}`
-                    }
-                }
-            );
+        // Luego trae todas las citas
+        const response = await fetch("http://localhost:3000/api/citas");
+        const citas = await response.json();
 
-        const citas =
-            await response.json();
+        // Filtra solo las citas de los tutores de este alumno
+        const tutorIds = representar.map(r => r.TutorId_Tutor);
+        const citasAlumno = citas.filter(c => tutorIds.includes(c.TutorId_Tutor));
 
-        const tabla =
-            document.getElementById(
-                "tablaCita"
-            );
-
+        const tabla = document.getElementById("tablaCita");
         if (!tabla) return;
-
         tabla.innerHTML = "";
 
-        citas.forEach(cita => {
-
+        citasAlumno.forEach(cita => {
             tabla.innerHTML += `
                 <tr>
                     <td>${cita.Id_Cita}</td>
@@ -438,15 +434,11 @@ async function cargarCitas() {
                     <td>${cita.Estado}</td>
                 </tr>
             `;
-
         });
 
     } catch (error) {
-
         console.error(error);
-
     }
-
 }
 
 // =========================
@@ -528,7 +520,8 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        cargarDashboard();
+        cargarInicio();
+        cargarRegistros();
 
     }
 );
