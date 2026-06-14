@@ -27,6 +27,10 @@ body {
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .logo {
@@ -376,6 +380,9 @@ tbody tr:hover {
 
     .sidebar {
         width: 100%;
+        position: relative;
+        height: auto;
+        overflow-y: visible;
     }
 
     .topbar {
@@ -692,4 +699,117 @@ tbody tr:hover {
     border-radius: 8px;
     font-size: .875rem;
     margin-top: 10px;
+}
+/* =========================================================
+   APARTADO DE CONSULTAS
+   ========================================================= */
+
+.consultas-intro {
+    color: #666;
+    font-size: .92rem;
+    margin: 4px 0 24px;
+    max-width: 800px;
+    line-height: 1.5;
+}
+
+.consultas-grupo-titulo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary, #4f46e5);
+    margin: 30px 0 14px;
+}
+
+.consultas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .consultas-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.consulta-card {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .07);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.consulta-card h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.consulta-card p {
+    font-size: .82rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.consulta-card .qb-sql {
+    border-radius: 8px;
+    font-size: .78rem;
+    max-height: 220px;
+    overflow: auto;
+}
+
+.consulta-card .consulta-resultado {
+    display: none;
+}
+
+.consulta-card .consulta-resultado.activo {
+    display: block;
+}
+
+.consulta-card .qb-error {
+    margin-top: 0;
+}
+
+.btn-ejecutar-consulta {
+    align-self: flex-start;
+    transition: all .2s ease;
+}
+
+.btn-ejecutar-consulta.activo {
+    background: linear-gradient(135deg, #4f46e5, #38bdf8);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, .3);
+}
+
+.btn-ejecutar-consulta.activo:hover {
+    background: linear-gradient(135deg, #4338ca, #0ea5e9);
+}
+
+.consulta-tablas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.consulta-tablas-label {
+    font-size: .78rem;
+    font-weight: 600;
+    color: #888;
+    margin-right: 2px;
+}
+
+.tabla-chip {
+    font-size: .75rem;
+    background: #eeeeff;
+    color: #3730a3;
+    border: 1px solid #a5a0e8;
+    border-radius: 99px;
+    padding: 2px 10px;
+    font-weight: 500;
 }

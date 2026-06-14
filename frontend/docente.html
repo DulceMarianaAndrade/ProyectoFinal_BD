@@ -64,6 +64,10 @@
                         <i class="fa-solid fa-people-arrows"></i>
                         Tutores representados
                     </li>
+                    <li class="menu-item" data-view="consultas">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Consultas
+                    </li>
                 </ul>
             </nav>
             <button id="logoutBtn" class="logout-btn">
@@ -533,6 +537,36 @@
                     <tbody id="tablaRepresentar">
                     </tbody>
                 </table>
+            </section>
+            
+            <!-- CONSULTAS -->
+            <section id="consultas" class="view">
+                <div class="section-header">
+                    <h2>Consultas SQL</h2>
+                </div>
+
+                <p class="consultas-intro">
+                    Selecciona una consulta para ver su código SQL, una breve explicación
+                    de lo que hace y, al ejecutarla, el resultado obtenido directamente
+                    desde la base de datos <strong>MiAulaDigital</strong>.
+                </p>
+
+                <!-- a. Consultas sencillas -->
+                <h3 class="consultas-grupo-titulo">a. Consultas sencillas</h3>
+                <div class="consultas-grid" data-grupo="sencillas"></div>
+
+                <!-- b. Consultas con campos agrupados -->
+                <h3 class="consultas-grupo-titulo">b. Consultas con campos agrupados</h3>
+                <div class="consultas-grid" data-grupo="agrupadas"></div>
+
+                <!-- c. Consultas con HAVING -->
+                <h3 class="consultas-grupo-titulo">c. Consultas con HAVING</h3>
+                <div class="consultas-grid" data-grupo="having"></div>
+
+                <!-- d. Consultas multitabla -->
+                <h3 class="consultas-grupo-titulo">d. Consultas multitabla</h3>
+                <div class="consultas-grid" data-grupo="multitabla"></div>
+
             </section>
         </main>
     </div>
