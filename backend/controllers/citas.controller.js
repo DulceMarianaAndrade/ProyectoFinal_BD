@@ -3,7 +3,7 @@ const db = require("../config/db");
 // Obtener todas las citas
 exports.getCitas = async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT * FROM Cita ORDER BY Fecha DESC");
+        const [rows] = await db.query("SELECT * FROM Cita");
         res.json(rows);
     } catch (error) {
         console.error(error);

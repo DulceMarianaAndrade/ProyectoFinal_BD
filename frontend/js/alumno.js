@@ -103,35 +103,26 @@ document
 // =========================
 // CARGAR VISTA
 // =========================
-
 function cargarVista(view) {
-
     switch (view) {
-
         case "grupos":
             cargarGrupos();
             break;
-
         case "materias":
             cargarMaterias();
             break;
-
         case "calificaciones":
             cargarCalificaciones();
             break;
-
         case "avisos":
             cargarAvisos();
             break;
-
         case "citas":
             cargarCitas();
             break;
-
         case "registros":
             cargarRegistros();
             break;
-
     }
 
 }
@@ -509,7 +500,7 @@ async function cargarRegistros() {
                     <td>${registro.Comportamiento}</td>
                     <td>${registro.Asistencia}</td>
                     <td>${registro.Fecha}</td>
-                    <td>${registro.Observaciones || ""}</td>
+                    <td>${registro.Observacion || ""}</td>
                 </tr>
             `;
 
@@ -532,11 +523,12 @@ async function cargarRegistros() {
 // CARGA INICIAL
 // =========================
 
+
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        cargarInicio();
+        cargarDashboard();
 
     }
 );
@@ -562,91 +554,92 @@ document
 
     });
 
-function abrirModal(
-    titulo,
-    campos,
-    callback
-){
+function formatearFecha(valor) {
+    if (!valor) return "";
+    return new Date(valor).toISOString().split("T")[0]; // → "2026-06-13"
+}
 
-    modalTitulo.textContent =
-        titulo;
+function mostrarFecha(fecha) {
+    if (!fecha) return "";
+    return new Date(fecha).toLocaleDateString("es-MX");
+}
 
-    camposModal.innerHTML =
-        "";
+function abrirModal(titulo, campos, callback, noAutoCerrar = false) {
+    modalTitulo.textContent = titulo;
+    camposModal.innerHTML = "";
 
     campos.forEach(campo => {
-
-        if(campo.tipo === "select"){
-
+        if (campo.tipo === "select") {
             let opciones = "";
-
             campo.opciones.forEach(op => {
-
-                opciones += `
-                    <option value="${op}">
-                        ${op}
-                    </option>
-                `;
-
+                opciones += `<option value="${op}" ${campo.valor === op ? "selected" : ""}>${op}</option>`;
             });
-
             camposModal.innerHTML += `
                 <label>${campo.label}</label>
-
-                <select
-                    id="${campo.id}"
-                    required
-                >
-                    ${opciones}
-                </select>
+                <select id="${campo.id}" required>${opciones}</select>
             `;
-
-        }else{
-
+        } else {
             camposModal.innerHTML += `
+                <label>${campo.label}</label>
                 <input
-                    type="${campo.tipo || "text"}"
+                    type="${campo.tipo === "fecha" ? "date" : campo.tipo || "text"}"
                     id="${campo.id}"
                     placeholder="${campo.label}"
-                    value="${campo.valor || ""}"
-                    required
+                    value="${campo.tipo === "fecha" ? formatearFecha(campo.valor) : (campo.valor || "")}"
                 >
             `;
-
         }
-
     });
 
-    modal.style.display =
-        "flex";
+    const esEliminar = titulo.startsWith("Eliminar");
 
-    formModal.onsubmit =
-        async (e) => {
+    if (esEliminar) {
+        camposModal.innerHTML += `
+            <div style="display:flex;gap:10px;margin-top:1.2rem">
+                <button type="button" id="btnCancelarEliminar"
+                    style="flex:1;padding:.7rem;background:#9ec9d0;border:1.5px solid #2087cb;border-radius:8px;background:#fff;cursor:pointer;font-size:1rem">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    style="flex:1;padding:.7rem;background:#e53e3e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:600">
+                    Sí, eliminar
+                </button>
+            </div>
+        `;
+    }else {
+        camposModal.innerHTML += `
+            <button type="submit" class="btn-primary" style="margin-top:1.2rem;width:100%">
+                Guardar
+            </button>
+        `;
+    }
 
-            e.preventDefault();
+    modal.style.display = "flex";
 
-            const datos = {};
+    document.getElementById("btnCancelarEliminar")?.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
 
-            campos.forEach(campo => {
+    formModal.onsubmit = async (e) => {
+        e.preventDefault();
 
-                datos[campo.id] =
-                    document.getElementById(
-                        campo.id
-                    ).value;
+        const datos = {};
+        campos.forEach(campo => {
+            datos[campo.id] = document.getElementById(campo.id).value;
+        });
 
-            });
+        if (!noAutoCerrar) {
+            modal.style.display = "none";
+        }
 
-            await callback(datos);
-
-            modal.style.display =
-                "none";
-        };
+        await callback(datos);
+    };
 }
+
 
 document
 .getElementById("btnAgendarCita")
 .addEventListener("click",()=>{
-
     abrirModal(
         "Agendar Cita",
         [
@@ -664,7 +657,8 @@ document
             },
             {
                 id:"Fecha",
-                label:"Fecha"
+                label:"Fecha",
+                tipo:"fecha"
             },
             {
                 id:"Estado",
@@ -676,9 +670,7 @@ document
                 ]
             }
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/citas",
                 {
@@ -689,7 +681,6 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarCitas();
         }
     );
@@ -698,54 +689,61 @@ document
 
 document
 .getElementById("btnModificarCita")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Cita");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Cita",
-        [
-            {id:"DocenteId_Docente",label:"ID Docente"},
-            {id:"TutorId_Tutor",label:"ID Tutor"},
-            {id:"Hora",label:"Hora"},
-            {id:"Fecha",label:"Fecha"},
-            {id:"Estado",label:"Estado",tipo:"select",opciones:["Agendada","No agendada"]}
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/citas/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarCitas();
-        }
+        "Seleccionar Cita",
+        [{ id: "Id_Cita", label: "ID Cita" }],
+        async (datos) => {
+            const id = datos.Id_Cita;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/citas/${id}`);
+                const cita = await response.json();
+                abrirModal(
+                    "Modificar Cita",
+                    [
+                        { id: "DocenteId_Docente", label: "ID Docente", valor: cita.DocenteId_Docente },
+                        { id: "TutorId_Tutor", label: "ID Tutor", valor: cita.TutorId_Tutor },
+                        { id: "Hora", label: "Hora", valor: cita.Hora },
+                        { id: "Fecha", label: "Fecha", tipo: "fecha", valor: cita.Fecha },
+                        {
+                            id: "Estado", label: "Estado",
+                            tipo: "select",
+                            opciones: ["Agendada", "No agendada"],
+                            valor: cita.Estado
+                        }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/citas/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarCitas();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener la cita");
+            }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarCita")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Cita");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/citas/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Cita",
+        [{ id: "Id_Cita", label: "ID Cita" }],
+        async (datos) => {
+            const id = datos.Id_Cita;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/citas/${id}`, {
+                method: "DELETE"
+            });
+            cargarCitas();
         }
     );
-
-    cargarCitas();
 });

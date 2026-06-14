@@ -4,6 +4,7 @@ const router = express.Router();
 const {
     getCalificaciones,
     getCalificacionesPorAlumno,
+    getCalificacion,
     createCalificacion,
     updateCalificacion,
     deleteCalificacion
@@ -14,6 +15,11 @@ router.get("/", getCalificaciones);
 router.get(
     "/alumno/:alumnoId",
     getCalificacionesPorAlumno
+);
+
+router.get(
+    "/:AlumnoId_Alumno/:MateriaId_Materia",
+    getCalificacion
 );
 
 router.post("/", createCalificacion);

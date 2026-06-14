@@ -26,6 +26,35 @@ exports.getCalificacionesPorAlumno = async (req, res) => {
     }
 };
 
+//Obtener calificaciones de una materia
+exports.getCalificacion = async (req, res) => {
+    try {
+        const {
+            AlumnoId_Alumno,
+            MateriaId_Materia
+        } = req.params;
+        const [rows] = await db.query(
+            `SELECT * FROM Cursar WHERE AlumnoId_Alumno = ? AND MateriaId_Materia = ?`,
+            [
+                AlumnoId_Alumno,
+                MateriaId_Materia
+            ]
+        );
+        if(rows.length === 0){
+            return res.status(404).json({
+                message: "Calificación no encontrada"
+            });
+        }
+        res.json(rows[0]);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Error al obtener calificación"
+        });
+    }
+
+};
+
 // Crear o actualizar calificación
 exports.createCalificacion = async (req, res) => {
     try {

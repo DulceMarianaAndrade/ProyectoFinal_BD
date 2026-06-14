@@ -60,6 +60,10 @@
                         <i class="fa-solid fa-clipboard-list"></i>
                         Registro Diario
                     </li>
+                    <li class="menu-item" data-view="representar">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        Tutores representados
+                    </li>
                 </ul>
             </nav>
             <button id="logoutBtn" class="logout-btn">
@@ -502,6 +506,34 @@
                     </tbody>
                 </table>
             </section>
+
+            <!-- REPRESENTAR -->
+            <section id="representar" class="view">
+                <div class="section-header">
+                    <h2>Tutor - Alumno</h2>
+                    <button class="btn-primary" id="btnNuevoRepresentar">
+                        Nueva Relación
+                    </button>
+                    <button class="btn-primary" id="btnModificarRepresentar">
+                        Modificar Relación
+                    </button>
+                    <button class="btn-delete" id="btnEliminarRepresentar">
+                        Eliminar Relación
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Tutor</th>
+                            <th>Nombre Tutor</th>
+                            <th>ID Alumno</th>
+                            <th>Nombre Alumno</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaRepresentar">
+                    </tbody>
+                </table>
+            </section>
         </main>
     </div>
     <div id="modal" class="modal">
@@ -516,13 +548,7 @@
             </h2>
 
             <form id="formModal">
-
                 <div id="camposModal"></div>
-
-                <button type="submit" class="btn-primary">
-                    Guardar
-                </button>
-
             </form>
 
         </div>

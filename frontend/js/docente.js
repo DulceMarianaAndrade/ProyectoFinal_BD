@@ -161,7 +161,9 @@ function cargarVista(view) {
         case "registros":
             cargarRegistros();
             break;
-
+        case "representar":
+            cargarRepresentar();
+            break;
     }
 
 }
@@ -367,26 +369,19 @@ async function cargarTutores() {
 // =========================
 
 async function cargarGrupos() {
-
     try {
-
         const response =
             await fetch(
                 "http://localhost:3000/api/grupos"
             );
-
         const grupos =
             await response.json();
-
         const tabla =
             document.getElementById(
                 "tablaGrupo"
             );
-
         tabla.innerHTML = "";
-
         grupos.forEach(grupo => {
-
             tabla.innerHTML += `
                 <tr>
                     <td>${grupo.Id_Grupo}</td>
@@ -395,15 +390,10 @@ async function cargarGrupos() {
                     <td>${grupo.Grupo}</td>
                 </tr>
             `;
-
         });
-
     } catch (error) {
-
         console.error(error);
-
     }
-
 }
 
 // =========================
@@ -572,9 +562,7 @@ async function cargarCitas() {
 }
 
 async function cargarRegistros() {
-
     try {
-
         const response =
             await fetch(
                 "http://localhost:3000/api/registros"
@@ -589,7 +577,6 @@ async function cargarRegistros() {
             );
 
         tabla.innerHTML = "";
-
         registros.forEach(registro => {
 
             tabla.innerHTML += `
@@ -604,13 +591,30 @@ async function cargarRegistros() {
             `;
 
         });
-
     } catch (error) {
-
         console.error(error);
-
     }
+}
 
+async function cargarRepresentar() {
+    try {
+        const response = await fetch("http://localhost:3000/api/representar");
+        const relaciones = await response.json();
+        const tabla = document.getElementById("tablaRepresentar");
+        tabla.innerHTML = "";
+        relaciones.forEach(rel => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${rel.TutorId_Tutor}</td>
+                    <td>${rel.NombreTutor}</td>
+                    <td>${rel.AlumnoId_Alumno}</td>
+                    <td>${rel.NombreAlumno}</td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 
@@ -648,91 +652,91 @@ document
 
     });
 
-function abrirModal(
-    titulo,
-    campos,
-    callback
-){
+function formatearFecha(valor) {
+    if (!valor) return "";
+    return new Date(valor).toISOString().split("T")[0]; // → "2026-06-13"
+}
 
-    modalTitulo.textContent =
-        titulo;
+function mostrarFecha(fecha) {
+    if (!fecha) return "";
+    return new Date(fecha).toLocaleDateString("es-MX");
+}
 
-    camposModal.innerHTML =
-        "";
+function abrirModal(titulo, campos, callback, noAutoCerrar = false) {
+    modalTitulo.textContent = titulo;
+    camposModal.innerHTML = "";
 
     campos.forEach(campo => {
-
-        if(campo.tipo === "select"){
-
+        if (campo.tipo === "select") {
             let opciones = "";
-
             campo.opciones.forEach(op => {
-
-                opciones += `
-                    <option value="${op}">
-                        ${op}
-                    </option>
-                `;
-
+                opciones += `<option value="${op}" ${campo.valor === op ? "selected" : ""}>${op}</option>`;
             });
-
             camposModal.innerHTML += `
                 <label>${campo.label}</label>
-
-                <select
-                    id="${campo.id}"
-                    required
-                >
-                    ${opciones}
-                </select>
+                <select id="${campo.id}" required>${opciones}</select>
             `;
-
-        }else{
-
+        } else {
             camposModal.innerHTML += `
+                <label>${campo.label}</label>
                 <input
-                    type="${campo.tipo || "text"}"
+                    type="${campo.tipo === "fecha" ? "date" : campo.tipo || "text"}"
                     id="${campo.id}"
                     placeholder="${campo.label}"
-                    value="${campo.valor || ""}"
-                    required
+                    value="${campo.tipo === "fecha" ? formatearFecha(campo.valor) : (campo.valor || "")}"
                 >
             `;
-
         }
-
     });
 
-    modal.style.display =
-        "flex";
+    const esEliminar = titulo.startsWith("Eliminar");
 
-    formModal.onsubmit =
-        async (e) => {
+    if (esEliminar) {
+        camposModal.innerHTML += `
+            <div style="display:flex;gap:10px;margin-top:1.2rem">
+                <button type="button" id="btnCancelarEliminar"
+                    style="flex:1;padding:.7rem;background:#9ec9d0;border:1.5px solid #2087cb;border-radius:8px;background:#fff;cursor:pointer;font-size:1rem">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    style="flex:1;padding:.7rem;background:#e53e3e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:600">
+                    Sí, eliminar
+                </button>
+            </div>
+        `;
+    }else {
+        camposModal.innerHTML += `
+            <button type="submit" class="btn-primary" style="margin-top:1.2rem;width:100%">
+                Guardar
+            </button>
+        `;
+    }
 
-            e.preventDefault();
+    modal.style.display = "flex";
 
-            const datos = {};
+    document.getElementById("btnCancelarEliminar")?.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
 
-            campos.forEach(campo => {
+    formModal.onsubmit = async (e) => {
+        e.preventDefault();
 
-                datos[campo.id] =
-                    document.getElementById(
-                        campo.id
-                    ).value;
+        const datos = {};
+        campos.forEach(campo => {
+            datos[campo.id] = document.getElementById(campo.id).value;
+        });
 
-            });
+        if (!noAutoCerrar) {
+            modal.style.display = "none";
+        }
 
-            await callback(datos);
-
-            modal.style.display =
-                "none";
-        };
+        await callback(datos);
+    };
 }
 
 document
     .getElementById("btnNuevoAlumno")
     .addEventListener("click", () => {
-
         abrirModal(
             "Nuevo Alumno",
             [
@@ -773,104 +777,69 @@ document
                         )
                     }
                 );
-
                 cargarAlumnos();
             }
         );
-
     });
 
- document
+document
     .getElementById("btnModificarAlumno")
     .addEventListener("click", () => {
-
-        const id =
-            prompt(
-                "ID Alumno"
-            );
-
-        if(!id) return;
-
         abrirModal(
-            "Modificar Alumno",
-            [
-                {
-                    id:"Nombre",
-                    label:"Nombre"
-                },
-                {
-                    id:"Apellido_Paterno",
-                    label:"Apellido Paterno"
-                },
-                {
-                    id:"Apellido_Materno",
-                    label:"Apellido Materno"
-                },
-                {
-                    id:"GrupoId_Grupo",
-                    label:"ID Grupo"
-                },
-                {
-                    id:"Fecha_nacimiento",
-                    label:"Fecha"
-                }
-            ],
-
+            "Seleccionar Alumno",
+            [{ id: "Id_Alumno", label: "ID Alumno" }],
             async (datos) => {
+                const id = datos.Id_Alumno;
+                if (!id) return;
+                try {
+                    const response = await fetch(`http://localhost:3000/api/alumnos/${id}`);
+                    const alumno = await response.json();
+                    abrirModal(
+                        "Modificar Alumno",
+                        [
+                            { id: "Nombre", label: "Nombre", valor: alumno.Nombre },
+                            { id: "Apellido_Paterno", label: "Apellido Paterno", valor: alumno.Apellido_Paterno },
+                            { id: "Apellido_Materno", label: "Apellido Materno", valor: alumno.Apellido_Materno },
+                            { id: "GrupoId_Grupo", label: "ID Grupo", valor: alumno.GrupoId_Grupo },
+                            { id: "Fecha_nacimiento", label: "Fecha Nacimiento", tipo: "fecha", valor: alumno.Fecha_nacimiento }
+                        ],
+                        async (datosModificados) => {
+                            await fetch(`http://localhost:3000/api/alumnos/${id}`, {
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(datosModificados)
+                            });
+                            cargarAlumnos();
+                        }
+                    );
+                } catch (error) {
+                    console.error(error);
+                    alert("No se pudo obtener el alumno");
+                }
+            },
+            true
+        );
+    });
 
-                await fetch(
-                    `http://localhost:3000/api/alumnos/${id}`,
-                    {
-                        method:"PUT",
-                        headers:{
-                            "Content-Type":
-                            "application/json"
-                        },
-                        body:JSON.stringify(
-                            datos
-                        )
-                    }
-                );
-
+document
+    .getElementById("btnEliminarAlumno")
+    .addEventListener("click", () => {
+        abrirModal(
+            "Eliminar Alumno",
+            [{ id: "Id_Alumno", label: "ID Alumno" }],
+            async (datos) => {
+                const id = datos.Id_Alumno;
+                if (!id) return;
+                await fetch(`http://localhost:3000/api/alumnos/${id}`, {
+                    method: "DELETE"
+                });
                 cargarAlumnos();
             }
         );
-
-    });
-    
-document
-    .getElementById("btnEliminarAlumno")
-    .addEventListener("click", async () => {
-
-        const id =
-            prompt(
-                "ID Alumno"
-            );
-
-        if(!id) return;
-
-        if(
-            !confirm(
-                "¿Eliminar alumno?"
-            )
-        ){
-            return;
-        }
-
-        await fetch(
-            `http://localhost:3000/api/alumnos/${id}`,
-            {
-                method:"DELETE"
-            }
-        );
-
-        cargarAlumnos();
-
     });
 
 document.getElementById("btnNuevoDocente")
 .addEventListener("click", () => {
-
     abrirModal(
         "Nuevo Docente",
         [
@@ -879,9 +848,7 @@ document.getElementById("btnNuevoDocente")
             {id:"Apellido_Materno",label:"Apellido Materno"},
             {id:"Contrasena",label:"Contraseña"}
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/docentes",
                 {
@@ -892,72 +859,69 @@ document.getElementById("btnNuevoDocente")
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarDocentes();
         }
     );
-
 });
 
 document
 .getElementById("btnModificarDocente")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Docente");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Docente",
-        [
-            {id:"Nombre",label:"Nombre"},
-            {id:"Apellido_Paterno",label:"Apellido Paterno"},
-            {id:"Apellido_Materno",label:"Apellido Materno"},
-            {id:"Contrasena",label:"Contraseña"}
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/docentes/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarDocentes();
-        }
+        "Seleccionar Docente",
+        [{ id: "Id_Docente", label: "ID Docente" }],
+        async (datos) => {
+            const id = datos.Id_Docente;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/docentes/${id}`);
+                const docente = await response.json();
+                abrirModal(
+                    "Modificar Docente",
+                    [
+                        { id: "Nombre", label: "Nombre", valor: docente.Nombre },
+                        { id: "Apellido_Paterno", label: "Apellido Paterno", valor: docente.Apellido_Paterno },
+                        { id: "Apellido_Materno", label: "Apellido Materno", valor: docente.Apellido_Materno },
+                        { id: "Contrasena", label: "Contraseña", valor: docente.Contrasena }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/docentes/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarDocentes();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener el docente");
+            }
+        },
+        true
     );
-
 });
 
 document
 .getElementById("btnEliminarDocente")
-.addEventListener("click", async()=>{
-
-    const id = prompt("ID Docente");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/docentes/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Docente",
+        [{ id: "Id_Docente", label: "ID Docente" }],
+        async (datos) => {
+            const id = datos.Id_Docente;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/docentes/${id}`, {
+                method: "DELETE"
+            });
+            cargarDocentes();
         }
     );
-
-    cargarDocentes();
-
 });
 
 document
 .getElementById("btnNuevoTutor")
 .addEventListener("click",()=>{
-
     abrirModal(
         "Nuevo Tutor",
         [
@@ -965,9 +929,7 @@ document
             {id:"Telefono",label:"Teléfono"},
             {id:"Direccion",label:"Dirección"}
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/tutores",
                 {
@@ -978,69 +940,68 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarTutores();
         }
     );
-
 });
 
 document
 .getElementById("btnModificarTutor")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Tutor");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Tutor",
-        [
-            {id:"Nombre",label:"Nombre"},
-            {id:"Telefono",label:"Teléfono"},
-            {id:"Direccion",label:"Dirección"}
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/tutores/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarTutores();
-        }
+        "Seleccionar Tutor",
+        [{ id: "Id_Tutor", label: "ID Tutor" }],
+        async (datos) => {
+            const id = datos.Id_Tutor;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/tutores/${id}`);
+                const tutor = await response.json();
+                abrirModal(
+                    "Modificar Tutor",
+                    [
+                        { id: "Nombre", label: "Nombre", valor: tutor.Nombre },
+                        { id: "Telefono", label: "Teléfono", valor: tutor.Telefono },
+                        { id: "Direccion", label: "Dirección", valor: tutor.Direccion }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/tutores/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarTutores();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener el tutor");
+            }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarTutor")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Tutor");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/tutores/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Tutor",
+        [{ id: "Id_Tutor", label: "ID Tutor" }],
+        async (datos) => {
+            const id = datos.Id_Tutor;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/tutores/${id}`, {
+                method: "DELETE"
+            });
+            cargarTutores();
         }
     );
-
-    cargarTutores();
 });
 
 document
 .getElementById("btnNuevoGrupo")
 .addEventListener("click",()=>{
-
     abrirModal(
         "Nuevo Grupo",
         [
@@ -1048,9 +1009,7 @@ document
             {id:"Grado",label:"Grado"},
             {id:"Grupo",label:"Grupo"}
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/grupos",
                 {
@@ -1061,69 +1020,68 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarGrupos();
         }
     );
-
 });
 
 document
 .getElementById("btnModificarGrupo")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Grupo");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Grupo",
-        [
-            {id:"DocenteId_Docente",label:"ID Docente"},
-            {id:"Grado",label:"Grado"},
-            {id:"Grupo",label:"Grupo"}
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/grupos/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarGrupos();
-        }
+        "Seleccionar Grupo",
+        [{ id: "Id_Grupo", label: "ID Grupo" }],
+        async (datos) => {
+            const id = datos.Id_Grupo;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/grupos/${id}`);
+                const grupo = await response.json();
+                abrirModal(
+                    "Modificar Grupo",
+                    [
+                        { id: "DocenteId_Docente", label: "ID Docente", valor: grupo.DocenteId_Docente },
+                        { id: "Grado", label: "Grado", valor: grupo.Grado },
+                        { id: "Grupo", label: "Grupo", valor: grupo.Grupo }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/grupos/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarGrupos();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener el grupo");
+            }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarGrupo")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Grupo");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/grupos/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Grupo",
+        [{ id: "Id_Grupo", label: "ID Grupo" }],
+        async (datos) => {
+            const id = datos.Id_Grupo;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/grupos/${id}`, {
+                method: "DELETE"
+            });
+            cargarGrupos();
         }
     );
-
-    cargarGrupos();
 });
 
 document
 .getElementById("btnNuevaMateria")
 .addEventListener("click",()=>{
-
     abrirModal(
         "Nueva Materia",
         [
@@ -1132,9 +1090,7 @@ document
                 label:"Nombre Materia"
             }
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/materias",
                 {
@@ -1145,70 +1101,66 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarMaterias();
         }
     );
-
 });
 
 document
 .getElementById("btnModificarMateria")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Materia");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Materia",
-        [
-            {
-                id:"Nombre_Materia",
-                label:"Materia"
+        "Seleccionar Materia",
+        [{ id: "Id_Materia", label: "ID Materia" }],
+        async (datos) => {
+            const id = datos.Id_Materia;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/materias/${id}`);
+                const materia = await response.json();
+                abrirModal(
+                    "Modificar Materia",
+                    [
+                        { id: "Nombre_Materia", label: "Materia", valor: materia.Nombre_Materia }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/materias/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarMaterias();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener la materia");
             }
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/materias/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarMaterias();
-        }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarMateria")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Materia");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/materias/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Materia",
+        [{ id: "Id_Materia", label: "ID Materia" }],
+        async (datos) => {
+            const id = datos.Id_Materia;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/materias/${id}`, {
+                method: "DELETE"
+            });
+            cargarMaterias();
         }
     );
-
-    cargarMaterias();
 });
 
 document
 .getElementById("btnNuevaCalificacion")
 .addEventListener("click",()=>{
-
     abrirModal(
         "Nueva Calificación",
         [
@@ -1225,9 +1177,7 @@ document
                 label:"Calificación"
             }
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/calificaciones",
                 {
@@ -1238,74 +1188,71 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarCalificaciones();
         }
     );
-
 });
 
 document
 .getElementById("btnModificarCalificacion")
-.addEventListener("click",()=>{
-
-    const alumno =
-        prompt("ID Alumno");
-
-    const materia =
-        prompt("ID Materia");
-
-    if(!alumno || !materia)
-        return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Calificación",
+        "Seleccionar Calificación",
         [
-            {
-                id:"Calificacion",
-                label:"Calificación"
-            }
+            { id: "AlumnoId_Alumno", label: "ID Alumno" },
+            { id: "MateriaId_Materia", label: "ID Materia" }
         ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/calificaciones/${alumno}/${materia}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarCalificaciones();
-        }
+        async (datos) => {
+            const alumno = datos.AlumnoId_Alumno;
+            const materia = datos.MateriaId_Materia;
+            if (!alumno || !materia) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/calificaciones/${alumno}/${materia}`);
+                const calificacion = await response.json();
+                abrirModal(
+                    "Modificar Calificación",
+                    [
+                        { id: "AlumnoId_Alumno", label: "ID Alumno", valor: calificacion.AlumnoId_Alumno },
+                        { id: "MateriaId_Materia", label: "ID Materia", valor: calificacion.MateriaId_Materia },
+                        { id: "Calificacion", label: "Calificación", valor: calificacion.Calificacion }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/calificaciones/${alumno}/${materia}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarCalificaciones();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener la calificación");
+            }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarCalificacion")
-.addEventListener("click",async()=>{
-
-    const alumno =
-        prompt("ID Alumno");
-
-    const materia =
-        prompt("ID Materia");
-
-    if(!alumno || !materia)
-        return;
-
-    await fetch(
-        `http://localhost:3000/api/calificaciones/${alumno}/${materia}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Calificación",
+        [
+            { id: "AlumnoId_Alumno", label: "ID Alumno" },
+            { id: "MateriaId_Materia", label: "ID Materia" }
+        ],
+        async (datos) => {
+            const alumno = datos.AlumnoId_Alumno;
+            const materia = datos.MateriaId_Materia;
+            if (!alumno || !materia) return;
+            await fetch(`http://localhost:3000/api/calificaciones/${alumno}/${materia}`, {
+                method: "DELETE"
+            });
+            cargarCalificaciones();
         }
     );
-
-    cargarCalificaciones();
 });
 
 document
@@ -1329,7 +1276,8 @@ document
             },
             {
                 id:"Fecha",
-                label:"Fecha"
+                label:"Fecha",
+                tipo:"fecha"
             },
             {
                 id:"Categoria",
@@ -1358,62 +1306,63 @@ document
 
 document
 .getElementById("btnModificarAviso")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Aviso");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Aviso",
-        [
-            {id:"DocenteId_Docente",label:"ID Docente"},
-            {id:"Titulo",label:"Título"},
-            {id:"Mensaje",label:"Mensaje"},
-            {id:"Fecha",label:"Fecha"},
-            {id:"Categoria",label:"Categoría"}
-        ],
+        "Seleccionar Aviso",
+        [{ id: "Id_Aviso", label: "ID Aviso" }],
+        async (datos) => {
+            const id = datos.Id_Aviso;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/avisos/${id}`);
+                const aviso = await response.json();
+                abrirModal(
+                    "Modificar Aviso",
+                    [
+                        { id: "DocenteId_Docente", label: "ID Docente", valor: aviso.DocenteId_Docente },
+                        { id: "Titulo", label: "Título", valor: aviso.Titulo },
+                        { id: "Mensaje", label: "Mensaje", valor: aviso.Mensaje },
+                        { id: "Fecha", label: "Fecha", tipo: "fecha", valor: aviso.Fecha },
+                        { id: "Categoria", label: "Categoría", valor: aviso.Categoria }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/avisos/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarAvisos();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener el aviso");
+            }
+        },
+        true
+    );
+});
 
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/avisos/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
+document
+.getElementById("btnEliminarAviso")
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Aviso",
+        [{ id: "Id_Aviso", label: "ID Aviso" }],
+        async (datos) => {
+            const id = datos.Id_Aviso;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/avisos/${id}`, {
+                method: "DELETE"
+            });
             cargarAvisos();
         }
     );
 });
 
 document
-.getElementById("btnEliminarAviso")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Aviso");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/avisos/${id}`,
-        {
-            method:"DELETE"
-        }
-    );
-
-    cargarAvisos();
-});
-
-document
 .getElementById("btnAgendarCita")
 .addEventListener("click",()=>{
-
     abrirModal(
         "Agendar Cita",
         [
@@ -1431,7 +1380,8 @@ document
             },
             {
                 id:"Fecha",
-                label:"Fecha"
+                label:"Fecha",
+                tipo:"fecha"
             },
             {
                 id:"Estado",
@@ -1443,9 +1393,7 @@ document
                 ]
             }
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/citas",
                 {
@@ -1456,7 +1404,6 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarCitas();
         }
     );
@@ -1465,56 +1412,63 @@ document
 
 document
 .getElementById("btnModificarCita")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Cita");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Cita",
-        [
-            {id:"DocenteId_Docente",label:"ID Docente"},
-            {id:"TutorId_Tutor",label:"ID Tutor"},
-            {id:"Hora",label:"Hora"},
-            {id:"Fecha",label:"Fecha"},
-            {id:"Estado",label:"Estado",tipo:"select",opciones:["Agendada","No agendada"]}
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/citas/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarCitas();
-        }
+        "Seleccionar Cita",
+        [{ id: "Id_Cita", label: "ID Cita" }],
+        async (datos) => {
+            const id = datos.Id_Cita;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/citas/${id}`);
+                const cita = await response.json();
+                abrirModal(
+                    "Modificar Cita",
+                    [
+                        { id: "DocenteId_Docente", label: "ID Docente", valor: cita.DocenteId_Docente },
+                        { id: "TutorId_Tutor", label: "ID Tutor", valor: cita.TutorId_Tutor },
+                        { id: "Hora", label: "Hora", valor: cita.Hora },
+                        { id: "Fecha", label: "Fecha", tipo: "fecha", valor: cita.Fecha },
+                        {
+                            id: "Estado", label: "Estado",
+                            tipo: "select",
+                            opciones: ["Agendada", "No agendada"],
+                            valor: cita.Estado
+                        }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/citas/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarCitas();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener la cita");
+            }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarCita")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Cita");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/citas/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Cita",
+        [{ id: "Id_Cita", label: "ID Cita" }],
+        async (datos) => {
+            const id = datos.Id_Cita;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/citas/${id}`, {
+                method: "DELETE"
+            });
+            cargarCitas();
         }
     );
-
-    cargarCitas();
 });
 
 document
@@ -1544,16 +1498,15 @@ document
             },
             {
                 id:"Fecha",
-                label:"Fecha"
+                label:"Fecha",
+                tipo:"fecha"
             },
             {
-                id:"Observaciones",
-                label:"Observaciones"
+                id:"Observacion",
+                label:"Observacion"
             }
         ],
-
         async(datos)=>{
-
             await fetch(
                 "http://localhost:3000/api/registros",
                 {
@@ -1564,65 +1517,144 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
             cargarRegistros();
         }
     );
-
 });
 
 document
 .getElementById("btnModificarRegistro")
-.addEventListener("click",()=>{
-
-    const id = prompt("ID Registro");
-
-    if(!id) return;
-
+.addEventListener("click", () => {
     abrirModal(
-        "Modificar Registro",
-        [
-            {id:"AlumnoId_Alumno",label:"ID Alumno"},
-            {id:"Comportamiento",label:"Comportamiento"},
-            {id:"Asistencia",label:"Asistencia",tipo:"select",opciones:["Presente","Ausente","Justificado"]},
-            {id:"Fecha",label:"Fecha"},
-            {id:"Observaciones",label:"Observaciones"}
-        ],
-
-        async(datos)=>{
-
-            await fetch(
-                `http://localhost:3000/api/registros/${id}`,
-                {
-                    method:"PUT",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(datos)
-                }
-            );
-
-            cargarRegistros();
-        }
+        "Seleccionar Registro",
+        [{ id: "Id_Registro", label: "ID Registro" }],
+        async (datos) => {
+            const id = datos.Id_Registro;
+            if (!id) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/registros/${id}`);
+                const registro = await response.json();
+                abrirModal(
+                    "Modificar Registro",
+                    [
+                        { id: "AlumnoId_Alumno", label: "ID Alumno", valor: registro.AlumnoId_Alumno },
+                        { id: "Comportamiento", label: "Comportamiento", valor: registro.Comportamiento },
+                        {
+                            id: "Asistencia", label: "Asistencia",
+                            tipo: "select",
+                            opciones: ["Presente", "Ausente", "Justificado"],
+                            valor: registro.Asistencia
+                        },
+                        { id: "Fecha", label: "Fecha", tipo: "fecha", valor: registro.Fecha },
+                        { id: "Observacion", label: "Observacion", valor: registro.Observacion }
+                    ],
+                    async (datosModificados) => {
+                        await fetch(`http://localhost:3000/api/registros/${id}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(datosModificados)
+                        });
+                        cargarRegistros();
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo obtener el registro");
+            }
+        },
+        true
     );
 });
 
 document
 .getElementById("btnEliminarRegistro")
-.addEventListener("click",async()=>{
-
-    const id = prompt("ID Registro");
-
-    if(!id) return;
-
-    await fetch(
-        `http://localhost:3000/api/registros/${id}`,
-        {
-            method:"DELETE"
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Registro",
+        [{ id: "Id_Registro", label: "ID Registro" }],
+        async (datos) => {
+            const id = datos.Id_Registro;
+            if (!id) return;
+            await fetch(`http://localhost:3000/api/registros/${id}`, {
+                method: "DELETE"
+            });
+            cargarRegistros();
         }
     );
+});
 
-    cargarRegistros();
+document
+.getElementById("btnNuevoRepresentar")
+.addEventListener("click", () => {
+    abrirModal(
+        "Nueva Relación",
+        [
+            { id: "TutorId_Tutor", label: "ID Tutor" },
+            { id: "AlumnoId_Alumno", label: "ID Alumno" }
+        ],
+        async (datos) => {
+            await fetch("http://localhost:3000/api/representar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            });
+            cargarRepresentar();
+        }
+    );
+});
+
+document
+.getElementById("btnModificarRepresentar")
+.addEventListener("click", () => {
+    abrirModal(
+        "Seleccionar Relación",
+        [
+            { id: "TutorId_Tutor", label: "ID Tutor actual" },
+            { id: "AlumnoId_Alumno", label: "ID Alumno actual" }
+        ],
+        async (datos) => {
+            const tutorId = datos.TutorId_Tutor;
+            const alumnoId = datos.AlumnoId_Alumno;
+            if (!tutorId || !alumnoId) return;
+            abrirModal(
+                "Modificar Relación",
+                [
+                    { id: "NuevoTutorId", label: "Nuevo ID Tutor", valor: tutorId },
+                    { id: "NuevoAlumnoId", label: "Nuevo ID Alumno", valor: alumnoId }
+                ],
+                async (datosModificados) => {
+                    await fetch(`http://localhost:3000/api/representar/${tutorId}/${alumnoId}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(datosModificados)
+                    });
+                    cargarRepresentar();
+                }
+            );
+        },
+        true
+    );
+});
+
+document
+.getElementById("btnEliminarRepresentar")
+.addEventListener("click", () => {
+    abrirModal(
+        "Eliminar Relación",
+        [
+            { id: "TutorId_Tutor", label: "ID Tutor" },
+            { id: "AlumnoId_Alumno", label: "ID Alumno" }
+        ],
+        async (datos) => {
+            const tutorId = datos.TutorId_Tutor;
+            const alumnoId = datos.AlumnoId_Alumno;
+            if (!tutorId || !alumnoId) return;
+            await fetch(`http://localhost:3000/api/representar/${tutorId}/${alumnoId}`, {
+                method: "DELETE"
+            });
+            cargarRepresentar();
+        }
+    );
 });
 
 // ════════════════════════════════════════════
@@ -1638,7 +1670,8 @@ const SCHEMA = {
     Cursar:   { label: "Calificaciones",       alias: "c",  cols: { AlumnoId_Alumno: "ID Alumno", MateriaId_Materia: "ID Materia", Calificacion: "Calificación" } },
     Aviso:    { label: "Avisos",               alias: "av", cols: { Id_Aviso: "ID", DocenteId_Docente: "ID Docente", Titulo: "Título", Mensaje: "Mensaje", Fecha: "Fecha", Categoria: "Categoría" } },
     Cita:     { label: "Citas",                alias: "ci", cols: { Id_Cita: "ID", DocenteId_Docente: "ID Docente", TutorId_Tutor: "ID Tutor", Hora: "Hora", Fecha: "Fecha", Estado: "Estado" } },
-    Registro: { label: "Registros diarios",    alias: "r",  cols: { Id_Registro: "ID", AlumnoId_Alumno: "ID Alumno", Comportamiento: "Comportamiento", Asistencia: "Asistencia", Fecha: "Fecha", Observaciones: "Observaciones" } }
+    Registro: { label: "Registros diarios",    alias: "r",  cols: { Id_Registro: "ID", AlumnoId_Alumno: "ID Alumno", Comportamiento: "Comportamiento", Asistencia: "Asistencia", Fecha: "Fecha", Observacion: "Observacion" } },
+    Representar: { label: "Tutores representados",       alias: "rp", cols: { TutorId_Tutor: "ID Tutor", AlumnoId_Alumno: "ID Alumno" } }
 };
 
 const OP_LABELS = {

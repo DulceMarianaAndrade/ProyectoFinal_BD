@@ -3,7 +3,7 @@ const db = require("../config/db");
 // Obtener todos los avisos
 exports.getAvisos = async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT * FROM Aviso ORDER BY Fecha DESC");
+        const [rows] = await db.query("SELECT * FROM Aviso");
         res.json(rows);
     } catch (error) {
         console.error(error);
@@ -29,11 +29,11 @@ exports.getAviso = async (req, res) => {
 // Crear aviso
 exports.createAviso = async (req, res) => {
     try {
-        const { Titulo, Contenido, Fecha, DocenteId_Docente } = req.body;
+        const { Titulo, Mensaje, Fecha, Categoria, DocenteId_Docente } = req.body;
         const docente = DocenteId_Docente || 1; // Usar 1 como defecto
         const [result] = await db.query(
             "INSERT INTO Aviso (Titulo, Mensaje, Fecha, Categoria, DocenteId_Docente) VALUES (?, ?, ?, ?, ?)",
-            [Titulo, Contenido, Fecha, "General", docente]
+            [Titulo, Mensaje, Fecha, Categoria || "General", docente]
         );
         res.status(201).json({ id: result.insertId, message: "Aviso creado exitosamente" });
     } catch (error) {
@@ -46,10 +46,10 @@ exports.createAviso = async (req, res) => {
 exports.updateAviso = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Titulo, Contenido, Fecha } = req.body;
+        const { Titulo, Mensaje, Fecha, Categoria } = req.body;
         await db.query(
-            "UPDATE Aviso SET Titulo = ?, Mensaje = ?, Fecha = ? WHERE Id_Aviso = ?",
-            [Titulo, Contenido, Fecha, id]
+            "UPDATE Aviso SET Titulo = ?, Mensaje = ?, Fecha = ?, Categoria = ? WHERE Id_Aviso = ?",
+            [Titulo, Mensaje, Fecha, Categoria, id]
         );
         res.json({ message: "Aviso actualizado exitosamente" });
     } catch (error) {

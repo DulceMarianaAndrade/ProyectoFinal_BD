@@ -29,17 +29,22 @@ exports.getGrupo = async (req, res) => {
 // Crear grupo
 exports.createGrupo = async (req, res) => {
     try {
-        const { Nombre, Grado, DocenteId_Docente } = req.body;
+        const { Grupo, Grado, DocenteId_Docente} = req.body;
         const docente = DocenteId_Docente || 1;
-        const grupo = Nombre || "A";
-        const [result] = await db.query(
-            "INSERT INTO Grupo (Grado, Grupo, DocenteId_Docente) VALUES (?, ?, ?)",
-            [Grado || 1, grupo, docente]
-        );
-        res.status(201).json({ id: result.insertId, message: "Grupo creado exitosamente" });
+        const [result] =
+            await db.query(
+                "INSERT INTO Grupo (Grado, Grupo, DocenteId_Docente) VALUES (?, ?, ?)",
+                [ Grado || 1, Grupo || "A", docente]
+            );
+        res.status(201).json({
+            id: result.insertId,
+            message: "Grupo creado exitosamente"
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al crear grupo" });
+        res.status(500).json({
+            message: "Error al crear grupo"
+        });
     }
 };
 
@@ -47,15 +52,19 @@ exports.createGrupo = async (req, res) => {
 exports.updateGrupo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Nombre, Grado } = req.body;
+        const { DocenteId_Docente, Grado, Grupo} = req.body;
         await db.query(
-            "UPDATE Grupo SET Grado = ?, Grupo = ? WHERE Id_Grupo = ?",
-            [Grado || 1, Nombre || "A", id]
+            `UPDATE Grupo SET DocenteId_Docente = ?, Grado = ?, Grupo = ? WHERE Id_Grupo = ?`,
+            [ DocenteId_Docente, Grado, Grupo, id]
         );
-        res.json({ message: "Grupo actualizado exitosamente" });
+        res.json({
+            message: "Grupo actualizado exitosamente"
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al actualizar grupo" });
+        res.status(500).json({
+            message: "Error al actualizar grupo"
+        });
     }
 };
 

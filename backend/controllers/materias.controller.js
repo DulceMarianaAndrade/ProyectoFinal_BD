@@ -29,15 +29,20 @@ exports.getMateria = async (req, res) => {
 // Crear materia
 exports.createMateria = async (req, res) => {
     try {
-        const { Nombre } = req.body;
+        const { Nombre_Materia } = req.body;
         const [result] = await db.query(
             "INSERT INTO Materia (Nombre_Materia) VALUES (?)",
-            [Nombre]
+            [Nombre_Materia]
         );
-        res.status(201).json({ id: result.insertId, message: "Materia creada exitosamente" });
+        res.status(201).json({
+            id: result.insertId,
+            message: "Materia creada exitosamente"
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al crear materia" });
+        res.status(500).json({
+            message: "Error al crear materia"
+        });
     }
 };
 
@@ -45,15 +50,19 @@ exports.createMateria = async (req, res) => {
 exports.updateMateria = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Nombre } = req.body;
+        const { Nombre_Materia } = req.body;
         await db.query(
             "UPDATE Materia SET Nombre_Materia = ? WHERE Id_Materia = ?",
-            [Nombre, id]
+            [Nombre_Materia, id]
         );
-        res.json({ message: "Materia actualizada exitosamente" });
+        res.json({
+            message: "Materia actualizada exitosamente"
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error al actualizar materia" });
+        res.status(500).json({
+            message: "Error al actualizar materia"
+        });
     }
 };
 
