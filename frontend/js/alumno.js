@@ -141,7 +141,7 @@ async function cargarInicio() {
 
         const response =
             await fetch(
-                `http://localhost:3000/api/calificaciones/alumno/${usuario.Id_Alumno}`,
+                `https://proyectofinal-bd.onrender.com/api/calificaciones/alumno/${usuario.Id_Alumno}`,
                 {
                     headers: {
                         Authorization:
@@ -203,7 +203,7 @@ async function cargarGrupos() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/grupos",
+                "https://proyectofinal-bd.onrender.com/api/grupos",
                 {
                     headers: {
                         Authorization:
@@ -254,7 +254,7 @@ async function cargarMaterias() {
 
         const response =
             await fetch(
-                `http://localhost:3000/api/calificaciones/alumno/${usuario.Id_Alumno}`,
+                `https://proyectofinal-bd.onrender.com/api/calificaciones/alumno/${usuario.Id_Alumno}`,
                 {
                     headers: {
                         Authorization:
@@ -304,7 +304,7 @@ async function cargarCalificaciones() {
 
         const response =
             await fetch(
-                `http://localhost:3000/api/calificaciones/alumno/${usuario.Id_Alumno}`,
+                `https://proyectofinal-bd.onrender.com/api/calificaciones/alumno/${usuario.Id_Alumno}`,
                 {
                     headers: {
                         Authorization:
@@ -355,7 +355,7 @@ async function cargarAvisos() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/avisos",
+                "https://proyectofinal-bd.onrender.com/api/avisos",
                 {
                     headers: {
                         Authorization:
@@ -407,12 +407,12 @@ async function cargarCitas() {
     try {
         // Primero obtén el tutor del alumno
         const repResponse = await fetch(
-            `http://localhost:3000/api/representar/alumno/${usuario.Id_Alumno}`
+            `https://proyectofinal-bd.onrender.com/api/representar/alumno/${usuario.Id_Alumno}`
         );
         const representar = await repResponse.json();
 
         // Luego trae todas las citas
-        const response = await fetch("http://localhost:3000/api/citas");
+        const response = await fetch("https://proyectofinal-bd.onrender.com/api/citas");
         const citas = await response.json();
 
         // Filtra solo las citas de los tutores de este alumno
@@ -451,7 +451,7 @@ async function cargarRegistros() {
 
         const response =
             await fetch(
-                `http://localhost:3000/api/registros/alumno/${usuario.Id_Alumno}`,
+                `https://proyectofinal-bd.onrender.com/api/registros/alumno/${usuario.Id_Alumno}`,
                 {
                     headers: {
                         Authorization:
@@ -665,7 +665,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/citas",
+                "https://proyectofinal-bd.onrender.com/api/citas",
                 {
                     method:"POST",
                     headers:{
@@ -690,7 +690,7 @@ document
             const id = datos.Id_Cita;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/citas/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`);
                 const cita = await response.json();
                 abrirModal(
                     "Modificar Cita",
@@ -707,7 +707,7 @@ document
                         }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/citas/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -733,7 +733,7 @@ document
         async (datos) => {
             const id = datos.Id_Cita;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/citas/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                 method: "DELETE"
             });
             cargarCitas();

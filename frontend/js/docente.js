@@ -183,10 +183,10 @@ async function cargarDashboard() {
             materias
         ] = await Promise.all([
 
-            fetch("http://localhost:3000/api/alumnos"),
-            fetch("http://localhost:3000/api/docentes"),
-            fetch("http://localhost:3000/api/grupos"),
-            fetch("http://localhost:3000/api/materias")
+            fetch("https://proyectofinal-bd.onrender.com/api/alumnos"),
+            fetch("https://proyectofinal-bd.onrender.com/api/docentes"),
+            fetch("https://proyectofinal-bd.onrender.com/api/grupos"),
+            fetch("https://proyectofinal-bd.onrender.com/api/materias")
 
         ]);
 
@@ -240,7 +240,7 @@ async function cargarAlumnos() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/alumnos"
+                "https://proyectofinal-bd.onrender.com/api/alumnos"
             );
 
         const alumnos =
@@ -285,7 +285,7 @@ async function cargarDocentes() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/docentes"
+                "https://proyectofinal-bd.onrender.com/api/docentes"
             );
 
         const docentes =
@@ -330,7 +330,7 @@ async function cargarTutores() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/tutores"
+                "https://proyectofinal-bd.onrender.com/api/tutores"
             );
 
         const tutores =
@@ -372,7 +372,7 @@ async function cargarGrupos() {
     try {
         const response =
             await fetch(
-                "http://localhost:3000/api/grupos"
+                "https://proyectofinal-bd.onrender.com/api/grupos"
             );
         const grupos =
             await response.json();
@@ -406,7 +406,7 @@ async function cargarMaterias() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/materias"
+                "https://proyectofinal-bd.onrender.com/api/materias"
             );
 
         const materias =
@@ -444,7 +444,7 @@ async function cargarCalificaciones() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/calificaciones"
+                "https://proyectofinal-bd.onrender.com/api/calificaciones"
             );
 
         const calificaciones =
@@ -483,7 +483,7 @@ async function cargarAvisos() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/avisos"
+                "https://proyectofinal-bd.onrender.com/api/avisos"
             );
 
         const avisos =
@@ -525,7 +525,7 @@ async function cargarCitas() {
 
         const response =
             await fetch(
-                "http://localhost:3000/api/citas"
+                "https://proyectofinal-bd.onrender.com/api/citas"
             );
 
         const citas =
@@ -565,7 +565,7 @@ async function cargarRegistros() {
     try {
         const response =
             await fetch(
-                "http://localhost:3000/api/registros"
+                "https://proyectofinal-bd.onrender.com/api/registros"
             );
 
         const registros =
@@ -598,7 +598,7 @@ async function cargarRegistros() {
 
 async function cargarRepresentar() {
     try {
-        const response = await fetch("http://localhost:3000/api/representar");
+        const response = await fetch("https://proyectofinal-bd.onrender.com/api/representar");
         const relaciones = await response.json();
         const tabla = document.getElementById("tablaRepresentar");
         tabla.innerHTML = "";
@@ -765,7 +765,7 @@ document
             async (datos) => {
 
                 await fetch(
-                    "http://localhost:3000/api/alumnos",
+                    "https://proyectofinal-bd.onrender.com/api/alumnos",
                     {
                         method:"POST",
                         headers:{
@@ -792,7 +792,7 @@ document
                 const id = datos.Id_Alumno;
                 if (!id) return;
                 try {
-                    const response = await fetch(`http://localhost:3000/api/alumnos/${id}`);
+                    const response = await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`);
                     const alumno = await response.json();
                     abrirModal(
                         "Modificar Alumno",
@@ -804,7 +804,7 @@ document
                             { id: "Fecha_nacimiento", label: "Fecha Nacimiento", tipo: "fecha", valor: alumno.Fecha_nacimiento }
                         ],
                         async (datosModificados) => {
-                            await fetch(`http://localhost:3000/api/alumnos/${id}`, {
+                            await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
                                 method: "PUT",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify(datosModificados)
@@ -830,7 +830,7 @@ document
             async (datos) => {
                 const id = datos.Id_Alumno;
                 if (!id) return;
-                await fetch(`http://localhost:3000/api/alumnos/${id}`, {
+                await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
                     method: "DELETE"
                 });
                 cargarAlumnos();
@@ -850,7 +850,7 @@ document.getElementById("btnNuevoDocente")
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/docentes",
+                "https://proyectofinal-bd.onrender.com/api/docentes",
                 {
                     method:"POST",
                     headers:{
@@ -874,7 +874,7 @@ document
             const id = datos.Id_Docente;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/docentes/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`);
                 const docente = await response.json();
                 abrirModal(
                     "Modificar Docente",
@@ -885,7 +885,7 @@ document
                         { id: "Contrasena", label: "Contraseña", valor: docente.Contrasena }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/docentes/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -911,7 +911,7 @@ document
         async (datos) => {
             const id = datos.Id_Docente;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/docentes/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
                 method: "DELETE"
             });
             cargarDocentes();
@@ -931,7 +931,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/tutores",
+                "https://proyectofinal-bd.onrender.com/api/tutores",
                 {
                     method:"POST",
                     headers:{
@@ -955,7 +955,7 @@ document
             const id = datos.Id_Tutor;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/tutores/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`);
                 const tutor = await response.json();
                 abrirModal(
                     "Modificar Tutor",
@@ -965,7 +965,7 @@ document
                         { id: "Direccion", label: "Dirección", valor: tutor.Direccion }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/tutores/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -991,7 +991,7 @@ document
         async (datos) => {
             const id = datos.Id_Tutor;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/tutores/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
                 method: "DELETE"
             });
             cargarTutores();
@@ -1011,7 +1011,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/grupos",
+                "https://proyectofinal-bd.onrender.com/api/grupos",
                 {
                     method:"POST",
                     headers:{
@@ -1035,7 +1035,7 @@ document
             const id = datos.Id_Grupo;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/grupos/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`);
                 const grupo = await response.json();
                 abrirModal(
                     "Modificar Grupo",
@@ -1045,7 +1045,7 @@ document
                         { id: "Grupo", label: "Grupo", valor: grupo.Grupo }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/grupos/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1071,7 +1071,7 @@ document
         async (datos) => {
             const id = datos.Id_Grupo;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/grupos/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
                 method: "DELETE"
             });
             cargarGrupos();
@@ -1092,7 +1092,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/materias",
+                "https://proyectofinal-bd.onrender.com/api/materias",
                 {
                     method:"POST",
                     headers:{
@@ -1116,7 +1116,7 @@ document
             const id = datos.Id_Materia;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/materias/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`);
                 const materia = await response.json();
                 abrirModal(
                     "Modificar Materia",
@@ -1124,7 +1124,7 @@ document
                         { id: "Nombre_Materia", label: "Materia", valor: materia.Nombre_Materia }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/materias/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1150,7 +1150,7 @@ document
         async (datos) => {
             const id = datos.Id_Materia;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/materias/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
                 method: "DELETE"
             });
             cargarMaterias();
@@ -1179,7 +1179,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/calificaciones",
+                "https://proyectofinal-bd.onrender.com/api/calificaciones",
                 {
                     method:"POST",
                     headers:{
@@ -1207,7 +1207,7 @@ document
             const materia = datos.MateriaId_Materia;
             if (!alumno || !materia) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/calificaciones/${alumno}/${materia}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`);
                 const calificacion = await response.json();
                 abrirModal(
                     "Modificar Calificación",
@@ -1217,7 +1217,7 @@ document
                         { id: "Calificacion", label: "Calificación", valor: calificacion.Calificacion }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/calificaciones/${alumno}/${materia}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1247,7 +1247,7 @@ document
             const alumno = datos.AlumnoId_Alumno;
             const materia = datos.MateriaId_Materia;
             if (!alumno || !materia) return;
-            await fetch(`http://localhost:3000/api/calificaciones/${alumno}/${materia}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                 method: "DELETE"
             });
             cargarCalificaciones();
@@ -1288,7 +1288,7 @@ document
         async(datos)=>{
 
             await fetch(
-                "http://localhost:3000/api/avisos",
+                "https://proyectofinal-bd.onrender.com/api/avisos",
                 {
                     method:"POST",
                     headers:{
@@ -1314,7 +1314,7 @@ document
             const id = datos.Id_Aviso;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/avisos/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`);
                 const aviso = await response.json();
                 abrirModal(
                     "Modificar Aviso",
@@ -1326,7 +1326,7 @@ document
                         { id: "Categoria", label: "Categoría", valor: aviso.Categoria }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/avisos/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1352,7 +1352,7 @@ document
         async (datos) => {
             const id = datos.Id_Aviso;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/avisos/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
                 method: "DELETE"
             });
             cargarAvisos();
@@ -1395,7 +1395,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/citas",
+                "https://proyectofinal-bd.onrender.com/api/citas",
                 {
                     method:"POST",
                     headers:{
@@ -1420,7 +1420,7 @@ document
             const id = datos.Id_Cita;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/citas/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`);
                 const cita = await response.json();
                 abrirModal(
                     "Modificar Cita",
@@ -1437,7 +1437,7 @@ document
                         }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/citas/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1463,7 +1463,7 @@ document
         async (datos) => {
             const id = datos.Id_Cita;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/citas/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                 method: "DELETE"
             });
             cargarCitas();
@@ -1508,7 +1508,7 @@ document
         ],
         async(datos)=>{
             await fetch(
-                "http://localhost:3000/api/registros",
+                "https://proyectofinal-bd.onrender.com/api/registros",
                 {
                     method:"POST",
                     headers:{
@@ -1532,7 +1532,7 @@ document
             const id = datos.Id_Registro;
             if (!id) return;
             try {
-                const response = await fetch(`http://localhost:3000/api/registros/${id}`);
+                const response = await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`);
                 const registro = await response.json();
                 abrirModal(
                     "Modificar Registro",
@@ -1549,7 +1549,7 @@ document
                         { id: "Observacion", label: "Observacion", valor: registro.Observacion }
                     ],
                     async (datosModificados) => {
-                        await fetch(`http://localhost:3000/api/registros/${id}`, {
+                        await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1575,7 +1575,7 @@ document
         async (datos) => {
             const id = datos.Id_Registro;
             if (!id) return;
-            await fetch(`http://localhost:3000/api/registros/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
                 method: "DELETE"
             });
             cargarRegistros();
@@ -1593,7 +1593,7 @@ document
             { id: "AlumnoId_Alumno", label: "ID Alumno" }
         ],
         async (datos) => {
-            await fetch("http://localhost:3000/api/representar", {
+            await fetch("https://proyectofinal-bd.onrender.com/api/representar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datos)
@@ -1623,7 +1623,7 @@ document
                     { id: "NuevoAlumnoId", label: "Nuevo ID Alumno", valor: alumnoId }
                 ],
                 async (datosModificados) => {
-                    await fetch(`http://localhost:3000/api/representar/${tutorId}/${alumnoId}`, {
+                    await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(datosModificados)
@@ -1649,7 +1649,7 @@ document
             const tutorId = datos.TutorId_Tutor;
             const alumnoId = datos.AlumnoId_Alumno;
             if (!tutorId || !alumnoId) return;
-            await fetch(`http://localhost:3000/api/representar/${tutorId}/${alumnoId}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
                 method: "DELETE"
             });
             cargarRepresentar();
@@ -2061,7 +2061,7 @@ async function qbEjecutar() {
             limite: qbState.limit
         };
 
-        const res = await fetch("http://localhost:3000/api/query/ejecutar", {
+        const res = await fetch("https://proyectofinal-bd.onrender.com/api/query/ejecutar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -2178,7 +2178,7 @@ async function cargarConsultasPredefinidas() {
 
     try {
 
-        const response = await fetch("http://localhost:3000/api/query/predefinidas", {
+        const response = await fetch("https://proyectofinal-bd.onrender.com/api/query/predefinidas", {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -2296,7 +2296,7 @@ async function ejecutarConsultaPredefinida(id, card) {
 
     try {
 
-        const response = await fetch(`http://localhost:3000/api/query/predefinida/${id}`, {
+        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/query/predefinida/${id}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
