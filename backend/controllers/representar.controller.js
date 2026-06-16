@@ -8,9 +8,9 @@ exports.getRepresentar = async (req, res) => {
             SELECT r.TutorId_Tutor, r.AlumnoId_Alumno,
                    t.Nombre AS NombreTutor,
                    CONCAT(al.Nombre, ' ', al.Apellido_Paterno) AS NombreAlumno
-            FROM representar r
-            JOIN tutor t ON r.TutorId_Tutor = t.Id_Tutor
-            JOIN alumno al ON r.AlumnoId_Alumno = al.Id_Alumno
+            FROM Representar r
+            JOIN Tutor t ON r.TutorId_Tutor = t.Id_Tutor
+            JOIN Alumno al ON r.AlumnoId_Alumno = al.Id_Alumno
         `);
         res.json(rows);
     } catch (error) {
@@ -27,9 +27,9 @@ exports.getRepresentarPorTutor = async (req, res) => {
             SELECT r.TutorId_Tutor, r.AlumnoId_Alumno,
                    t.Nombre AS NombreTutor,
                    CONCAT(al.Nombre, ' ', al.Apellido_Paterno) AS NombreAlumno
-            FROM representar r
-            JOIN tutor t ON r.TutorId_Tutor = t.Id_Tutor
-            JOIN alumno al ON r.AlumnoId_Alumno = al.Id_Alumno
+            FROM Representar r
+            JOIN Tutor t ON r.TutorId_Tutor = t.Id_Tutor
+            JOIN Alumno al ON r.AlumnoId_Alumno = al.Id_Alumno
             WHERE r.TutorId_Tutor = ?
         `, [tutorId]);
         res.json(rows);
@@ -47,9 +47,9 @@ exports.getRepresentarPorAlumno = async (req, res) => {
             SELECT r.TutorId_Tutor, r.AlumnoId_Alumno,
                    t.Nombre AS NombreTutor,
                    CONCAT(al.Nombre, ' ', al.Apellido_Paterno) AS NombreAlumno
-            FROM representar r
-            JOIN tutor t ON r.TutorId_Tutor = t.Id_Tutor
-            JOIN alumno al ON r.AlumnoId_Alumno = al.Id_Alumno
+            FROM Representar r
+            JOIN Tutor t ON r.TutorId_Tutor = t.Id_Tutor
+            JOIN Alumno al ON r.AlumnoId_Alumno = al.Id_Alumno
             WHERE r.AlumnoId_Alumno = ?
         `, [alumnoId]);
         res.json(rows);
@@ -64,9 +64,8 @@ exports.createRepresentar = async (req, res) => {
     try {
         const { TutorId_Tutor, AlumnoId_Alumno } = req.body;
 
-        // Verificar que no exista ya
         const [existe] = await db.query(
-            "SELECT * FROM representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
+            "SELECT * FROM Representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
             [TutorId_Tutor, AlumnoId_Alumno]
         );
         if (existe.length > 0) {
@@ -74,7 +73,7 @@ exports.createRepresentar = async (req, res) => {
         }
 
         await db.query(
-            "INSERT INTO representar (TutorId_Tutor, AlumnoId_Alumno) VALUES (?, ?)",
+            "INSERT INTO Representar (TutorId_Tutor, AlumnoId_Alumno) VALUES (?, ?)",
             [TutorId_Tutor, AlumnoId_Alumno]
         );
         res.status(201).json({ message: "Relación creada exitosamente" });
@@ -90,31 +89,28 @@ exports.updateRepresentar = async (req, res) => {
         const { tutorId, alumnoId } = req.params;
         const { NuevoTutorId, NuevoAlumnoId } = req.body;
 
-        // Verificar que la relación original existe
         const [existe] = await db.query(
-            "SELECT * FROM representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
+            "SELECT * FROM Representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
             [tutorId, alumnoId]
         );
         if (existe.length === 0) {
             return res.status(404).json({ message: "Relación no encontrada" });
         }
 
-        // Verificar que la nueva relación no exista ya
         const [duplicado] = await db.query(
-            "SELECT * FROM representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
+            "SELECT * FROM Representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
             [NuevoTutorId, NuevoAlumnoId]
         );
         if (duplicado.length > 0) {
             return res.status(400).json({ message: "La nueva relación ya existe" });
         }
 
-        // Eliminar la vieja e insertar la nueva
         await db.query(
-            "DELETE FROM representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
+            "DELETE FROM Representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
             [tutorId, alumnoId]
         );
         await db.query(
-            "INSERT INTO representar (TutorId_Tutor, AlumnoId_Alumno) VALUES (?, ?)",
+            "INSERT INTO Representar (TutorId_Tutor, AlumnoId_Alumno) VALUES (?, ?)",
             [NuevoTutorId, NuevoAlumnoId]
         );
 
@@ -129,15 +125,17 @@ exports.updateRepresentar = async (req, res) => {
 exports.deleteRepresentar = async (req, res) => {
     try {
         const { tutorId, alumnoId } = req.params;
+
         const [existe] = await db.query(
-            "SELECT * FROM representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
+            "SELECT * FROM Representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
             [tutorId, alumnoId]
         );
         if (existe.length === 0) {
             return res.status(404).json({ message: "Relación no encontrada" });
         }
+
         await db.query(
-            "DELETE FROM representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
+            "DELETE FROM Representar WHERE TutorId_Tutor = ? AND AlumnoId_Alumno = ?",
             [tutorId, alumnoId]
         );
         res.json({ message: "Relación eliminada exitosamente" });
