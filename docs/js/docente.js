@@ -1840,11 +1840,16 @@ function qbRenderFilters() {
         opSel.onchange = () => { qbState.filters[i].op = opSel.value; qbRebuild(); };
         row.appendChild(opSel);
 
-        valInp.oninput = () => { 
-    qbState.filters[i].val = valInp.value; 
-    qbBuildSQL();             
-    document.getElementById("btnRun").disabled = qbState.filters.some(f => f.col && f.val === "") ? false : false; 
-};
+        const valInp = document.createElement("input");
+        valInp.type = "text";
+        valInp.className = "qb-input-val";
+        valInp.placeholder = "valor";
+        valInp.value = f.val || "";
+        valInp.oninput = () => {
+            qbState.filters[i].val = valInp.value;
+            qbBuildSQL(); 
+        };
+        row.appendChild(valInp);
 
         const rm = document.createElement("button");
         rm.className = "qb-btn-rm";
@@ -1922,7 +1927,6 @@ function qbAlias(tbl) {
 }
 
 function qbBuildSQL() {
-    function qbBuildSQL() {
     if (!qbState.tabla) {
         document.getElementById("sqlPreview").textContent = "-- Elige una tabla para comenzar";
         document.getElementById("btnRun").disabled = true;
