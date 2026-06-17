@@ -1840,13 +1840,11 @@ function qbRenderFilters() {
         opSel.onchange = () => { qbState.filters[i].op = opSel.value; qbRebuild(); };
         row.appendChild(opSel);
 
-        const valInp = document.createElement("input");
-        valInp.type = "text";
-        valInp.className = "qb-input-val";
-        valInp.placeholder = "valor";
-        valInp.value = f.val || "";
-        valInp.oninput = () => { qbState.filters[i].val = valInp.value; qbRebuild(); };
-        row.appendChild(valInp);
+        valInp.oninput = () => { 
+    qbState.filters[i].val = valInp.value; 
+    qbBuildSQL();             
+    document.getElementById("btnRun").disabled = qbState.filters.some(f => f.col && f.val === "") ? false : false; 
+};
 
         const rm = document.createElement("button");
         rm.className = "qb-btn-rm";
@@ -1924,6 +1922,7 @@ function qbAlias(tbl) {
 }
 
 function qbBuildSQL() {
+    function qbBuildSQL() {
     if (!qbState.tabla) {
         document.getElementById("sqlPreview").textContent = "-- Elige una tabla para comenzar";
         document.getElementById("btnRun").disabled = true;
@@ -1932,11 +1931,17 @@ function qbBuildSQL() {
 
     const mainAlias = qbAlias(qbState.tabla);
     const tieneJoins = qbState.joins.some(j => j.tabla && j.onLeft && j.onRight);
+    const tieneGroup = qbState.groups.length > 0;
 
     // SELECT
     let cols;
     if (qbState.cols.length > 0) {
         cols = qbState.cols.map(c => {
+            const [tbl, col] = c.split(".");
+            return `${qbAlias(tbl)}.${col}`;
+        }).join(", ");
+    } else if (tieneGroup) {
+        cols = qbState.groups.map(c => {
             const [tbl, col] = c.split(".");
             return `${qbAlias(tbl)}.${col}`;
         }).join(", ");
@@ -1946,8 +1951,7 @@ function qbBuildSQL() {
             : "*";
     }
 
-    // COUNT si hay agrupación
-    if (qbState.groups.length > 0 && !qbState.cols.some(c => c.toLowerCase().includes("count"))) {
+    if (tieneGroup && !cols.includes("COUNT(")) {
         cols += ", COUNT(*) AS total";
     }
 
