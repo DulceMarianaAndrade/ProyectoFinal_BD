@@ -1662,16 +1662,16 @@ document
 // ════════════════════════════════════════════
 
 const SCHEMA = {
-    Alumno:   { label: "Alumnos",              alias: "al", cols: { Id_Alumno: "ID", GrupoId_Grupo: "ID Grupo", Nombre: "Nombre", Apellido_P: "Apellido paterno", Apellido_M: "Apellido materno", Fecha_Nac: "Fecha de nacimiento" } },
-    Docente:  { label: "Docentes",             alias: "d",  cols: { Id_Docente: "ID", Nombre: "Nombre", Apellido_P: "Apellido paterno", Apellido_M: "Apellido materno", Contrasena: "Contraseña" } },
-    Tutor:    { label: "Tutores",              alias: "t",  cols: { Id_Tutor: "ID", Nombre: "Nombre", Telefono: "Teléfono", Direccion: "Dirección" } },
-    Grupo:    { label: "Grupos",               alias: "g",  cols: { Id_Grupo: "ID Grupo", DocenteId_Docente: "ID Docente", Grado: "Grado", Grupo: "Grupo" } },
-    Materia:  { label: "Materias",             alias: "m",  cols: { Id_Materia: "ID", Nombre: "Nombre de la materia" } },
-    Cursar:   { label: "Calificaciones",       alias: "c",  cols: { AlumnoId_Alumno: "ID Alumno", MateriaId_Materia: "ID Materia", Calificacion: "Calificación" } },
-    Aviso:    { label: "Avisos",               alias: "av", cols: { Id_Aviso: "ID", DocenteId_Docente: "ID Docente", Titulo: "Título", Mensaje: "Mensaje", Fecha: "Fecha", Categoria: "Categoría" } },
-    Cita:     { label: "Citas",                alias: "ci", cols: { Id_Cita: "ID", DocenteId_Docente: "ID Docente", TutorId_Tutor: "ID Tutor", Hora: "Hora", Fecha: "Fecha", Estado: "Estado" } },
-    Registro: { label: "Registros diarios",    alias: "r",  cols: { Id_Registro: "ID", AlumnoId_Alumno: "ID Alumno", Comportamiento: "Comportamiento", Asistencia: "Asistencia", Fecha: "Fecha", Observacion: "Observacion" } },
-    Representar: { label: "Tutores representados",       alias: "rp", cols: { TutorId_Tutor: "ID Tutor", AlumnoId_Alumno: "ID Alumno" } }
+    Alumno:      { label: "Alumnos",           alias: "al", cols: { Id_Alumno: "ID", GrupoId_Grupo: "ID Grupo", Nombre: "Nombre", Apellido_Paterno: "Apellido paterno", Apellido_Materno: "Apellido materno", Fecha_nacimiento: "Fecha de nacimiento" } },
+    Docente:     { label: "Docentes",          alias: "d",  cols: { Id_Docente: "ID", Nombre: "Nombre", Apellido_Paterno: "Apellido paterno", Apellido_Materno: "Apellido materno", Contrasena: "Contraseña" } },
+    Tutor:       { label: "Tutores",           alias: "t",  cols: { Id_Tutor: "ID", Nombre: "Nombre", Telefono: "Teléfono", Direccion: "Dirección" } },
+    Grupo:       { label: "Grupos",            alias: "g",  cols: { Id_Grupo: "ID Grupo", DocenteId_Docente: "ID Docente", Grado: "Grado", Grupo: "Grupo" } },
+    Materia:     { label: "Materias",          alias: "m",  cols: { Id_Materia: "ID", Nombre_Materia: "Nombre de la materia" } },
+    Cursar:      { label: "Calificaciones",    alias: "c",  cols: { AlumnoId_Alumno: "ID Alumno", MateriaId_Materia: "ID Materia", Calificacion: "Calificación" } },
+    Aviso:       { label: "Avisos",            alias: "av", cols: { Id_Aviso: "ID", DocenteId_Docente: "ID Docente", Titulo: "Título", Mensaje: "Mensaje", Fecha: "Fecha", Categoria: "Categoría" } },
+    Cita:        { label: "Citas",             alias: "ci", cols: { Id_Cita: "ID", DocenteId_Docente: "ID Docente", TutorId_Tutor: "ID Tutor", Hora: "Hora", Fecha: "Fecha", Estado: "Estado" } },
+    Registro_Diario: { label: "Registros diarios", alias: "r", cols: { Id_Registro: "ID", AlumnoId_Alumno: "ID Alumno", Comportamiento: "Comportamiento", Asistencia: "Asistencia", Fecha: "Fecha", Observacion: "Observacion" } },
+    Representar: { label: "Tutores representados", alias: "rp", cols: { TutorId_Tutor: "ID Tutor", AlumnoId_Alumno: "ID Alumno" } }
 };
 
 const OP_LABELS = {

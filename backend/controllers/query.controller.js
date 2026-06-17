@@ -293,7 +293,8 @@ exports.ejecutarConsultaPredefinida = async (req, res) => {
 
 const TABLAS_PERMITIDAS = [
     "Alumno", "Docente", "Tutor", "Grupo",
-    "Materia", "Cursar", "Aviso", "Cita", "Registro"
+    "Materia", "Cursar", "Aviso", "Cita",
+    "Registro_Diario", "Representar"
 ];
 
 exports.ejecutarConsulta = async (req, res) => {
