@@ -802,7 +802,7 @@ document
 
             async (datos) => {
 
-                await fetch(
+                const response = await fetch(
                     "https://proyectofinal-bd.onrender.com/api/alumnos",
                     {
                         method:"POST",
@@ -848,7 +848,7 @@ document
                             { id: "Fecha_nacimiento", label: "Fecha Nacimiento", tipo: "fecha", valor: alumno.Fecha_nacimiento, requerido: true }
                         ],
                         async (datosModificados) => {
-                            await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
+                            const response = await fetch (`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
                                 method: "PUT",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify(datosModificados)
@@ -880,7 +880,7 @@ document
             async (datos) => {
                 const id = datos.Id_Alumno;
                 if (!id) return;
-                await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
+                const response = await fetch (`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
                     method: "DELETE"
                 });
                 const data = await response.json();
@@ -905,7 +905,7 @@ document.getElementById("btnNuevoDocente")
             {id:"Contrasena",label:"Contraseña"}
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/docentes",
                 {
                     method:"POST",
@@ -947,7 +947,7 @@ document
                         { id: "Contrasena", label: "Contraseña", valor: docente.Contrasena }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -979,7 +979,7 @@ document
         async (datos) => {
             const id = datos.Id_Docente;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1004,7 +1004,7 @@ document
             {id:"Direccion",label:"Dirección"}
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/tutores",
                 {
                     method:"POST",
@@ -1045,7 +1045,7 @@ document
                         { id: "Direccion", label: "Dirección", valor: tutor.Direccion }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1077,7 +1077,7 @@ document
         async (datos) => {
             const id = datos.Id_Tutor;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1102,7 +1102,7 @@ document
             {id:"Grupo",label:"Grupo"}
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/grupos",
                 {
                     method:"POST",
@@ -1143,7 +1143,7 @@ document
                         { id: "Grupo", label: "Grupo", valor: grupo.Grupo }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1175,7 +1175,7 @@ document
         async (datos) => {
             const id = datos.Id_Grupo;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1201,7 +1201,7 @@ document
             }
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/materias",
                 {
                     method:"POST",
@@ -1240,7 +1240,7 @@ document
                         { id: "Nombre_Materia", label: "Materia", valor: materia.Nombre_Materia }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1272,7 +1272,7 @@ document
         async (datos) => {
             const id = datos.Id_Materia;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1306,7 +1306,7 @@ document
             }
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/calificaciones",
                 {
                     method:"POST",
@@ -1351,7 +1351,7 @@ document
                         { id: "Calificacion", label: "Calificación", valor: calificacion.Calificacion }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1387,7 +1387,7 @@ document
             const alumno = datos.AlumnoId_Alumno;
             const materia = datos.MateriaId_Materia;
             if (!alumno || !materia) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1433,7 +1433,7 @@ document
 
         async(datos)=>{
 
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/avisos",
                 {
                     method:"POST",
@@ -1477,7 +1477,7 @@ document
                         { id: "Categoria", label: "Categoría", valor: aviso.Categoria }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1509,7 +1509,7 @@ document
         async (datos) => {
             const id = datos.Id_Aviso;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1557,7 +1557,7 @@ document
             }
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/citas",
                 {
                     method:"POST",
@@ -1606,7 +1606,7 @@ document
                         }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1638,7 +1638,7 @@ document
         async (datos) => {
             const id = datos.Id_Cita;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1688,7 +1688,7 @@ document
             }
         ],
         async(datos)=>{
-            await fetch(
+            const response = await fetch(
                 "https://proyectofinal-bd.onrender.com/api/registros",
                 {
                     method:"POST",
@@ -1736,7 +1736,7 @@ document
                         { id: "Observacion", label: "Observacion", valor: registro.Observacion }
                     ],
                     async (datosModificados) => {
-                        await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
+                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
@@ -1768,7 +1768,7 @@ document
         async (datos) => {
             const id = datos.Id_Registro;
             if (!id) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
                 method: "DELETE"
             });
             const data = await response.json();
@@ -1792,7 +1792,7 @@ document
             { id: "AlumnoId_Alumno", label: "ID Alumno" }
         ],
         async (datos) => {
-            await fetch("https://proyectofinal-bd.onrender.com/api/representar", {
+            const response = await fetch("https://proyectofinal-bd.onrender.com/api/representar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datos)
@@ -1828,7 +1828,7 @@ document
                     { id: "NuevoAlumnoId", label: "Nuevo ID Alumno", valor: alumnoId }
                 ],
                 async (datosModificados) => {
-                    await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
+                    const response = await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(datosModificados)
@@ -1860,7 +1860,7 @@ document
             const tutorId = datos.TutorId_Tutor;
             const alumnoId = datos.AlumnoId_Alumno;
             if (!tutorId || !alumnoId) return;
-            await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
+            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
                 method: "DELETE"
             });
             const data = await response.json();
