@@ -690,30 +690,6 @@ function abrirModal(titulo, campos, callback, noAutoCerrar = false) {
         }
     });
 
-    function mostrarAlerta(mensaje, tipo = "exito") {
-        const alerta = document.createElement("div");
-        alerta.textContent = mensaje;
-        alerta.style.position = "fixed";
-        alerta.style.top = "20px";
-        alerta.style.right = "20px";
-        alerta.style.padding = "1rem 1.5rem";
-        alerta.style.borderRadius = "8px";
-        alerta.style.color = "#fff";
-        alerta.style.fontWeight = "600";
-        alerta.style.zIndex = "9999";
-        alerta.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
-        alerta.style.background = tipo === "exito" ? "#22c55e" : "#e53e3e";
-        alerta.style.animation = "entrarAlerta 0.3s ease";
-
-        document.body.appendChild(alerta);
-
-        setTimeout(() => {
-            alerta.style.opacity = "0";
-            alerta.style.transition = "opacity 0.3s";
-            setTimeout(() => alerta.remove(), 300);
-        }, 2500);
-    }
-
     const esEliminar = titulo.startsWith("Eliminar");
 
     if (esEliminar) {
@@ -807,12 +783,6 @@ document
                         )
                     }
                 );
-                const data = await response.json();
-                if (!response.ok) {
-                    mostrarAlerta(data.message || "Ocurrió un error", "error");
-                    return;
-                }
-                mostrarAlerta(data.message || "Alumno creado exitosamente", "exito");
                 cargarAlumnos();
             }
         );
@@ -1224,12 +1194,6 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error");
-                return;
-            }
-            mostrarAlerta(data.message, "exito");
             cargarCalificaciones();
         }
     );
@@ -1446,12 +1410,6 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error");
-                return;
-            }
-            mostrarAlerta(data.message, "exito");
             cargarCitas();
         }
     );
