@@ -763,6 +763,7 @@ document
                 {
                     id:"Fecha_nacimiento",
                     label:"Fecha Nacimiento",
+                    tipo:"fecha",
                     requerido: true
                 }
             ],
@@ -802,11 +803,11 @@ document
                     abrirModal(
                         "Modificar Alumno",
                         [
-                            { id: "Nombre", label: "Nombre", valor: alumno.Nombre },
-                            { id: "Apellido_Paterno", label: "Apellido Paterno", valor: alumno.Apellido_Paterno },
-                            { id: "Apellido_Materno", label: "Apellido Materno", valor: alumno.Apellido_Materno },
+                            { id: "Nombre", label: "Nombre", valor: alumno.Nombre, requerido: true },
+                            { id: "Apellido_Paterno", label: "Apellido Paterno", valor: alumno.Apellido_Paterno, requerido: true },
+                            { id: "Apellido_Materno", label: "Apellido Materno", valor: alumno.Apellido_Materno, requerido: true },
                             { id: "GrupoId_Grupo", label: "ID Grupo", valor: alumno.GrupoId_Grupo },
-                            { id: "Fecha_nacimiento", label: "Fecha Nacimiento", tipo: "fecha", valor: alumno.Fecha_nacimiento }
+                            { id: "Fecha_nacimiento", label: "Fecha Nacimiento", tipo: "fecha", valor: alumno.Fecha_nacimiento, requerido: true }
                         ],
                         async (datosModificados) => {
                             await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
