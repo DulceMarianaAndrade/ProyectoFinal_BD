@@ -30,10 +30,6 @@ exports.getAlumno = async (req, res) => {
 exports.createAlumno = async (req, res) => {
     try {
         const { Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo, Fecha_nacimiento } = req.body;
-        const [result] = await db.query(
-            "INSERT INTO Alumno (Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo, Fecha_nacimiento) VALUES (?, ?, ?, ?, ?)",
-            [Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo || 1, Fecha_nacimiento || "2010-01-01"]
-        );
         if(
             !Nombre ||
             !Apellido_Paterno ||
@@ -45,6 +41,10 @@ exports.createAlumno = async (req, res) => {
                 "Todos los campos son obligatorios"
             });
         }
+        const [result] = await db.query(
+            "INSERT INTO Alumno (Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo, Fecha_nacimiento) VALUES (?, ?, ?, ?, ?)",
+            [Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo || 1, Fecha_nacimiento || "2010-01-01"]
+        );
         res.status(201).json({ id: result.insertId, message: "Alumno creado exitosamente" });
     } catch (error) {
         console.error(error);
@@ -57,6 +57,11 @@ exports.updateAlumno = async (req, res) => {
     try {
         const { id } = req.params;
         const { Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo, Fecha_nacimiento } = req.body;
+        
+        if (!Nombre || !Apellido_Paterno || !Apellido_Materno || !Fecha_nacimiento) {
+            return res.status(400).json({ message: "Nombre, apellidos y fecha de nacimiento son obligatorios" });
+        }
+
         await db.query(
             "UPDATE Alumno SET Nombre = ?, Apellido_Paterno = ?, Apellido_Materno = ?, GrupoId_Grupo = ?, Fecha_nacimiento = ? WHERE Id_Alumno = ?",
             [Nombre, Apellido_Paterno, Apellido_Materno, GrupoId_Grupo, Fecha_nacimiento, id]

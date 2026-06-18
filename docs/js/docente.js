@@ -684,6 +684,7 @@ function abrirModal(titulo, campos, callback, noAutoCerrar = false) {
                     id="${campo.id}"
                     placeholder="${campo.label}"
                     value="${campo.tipo === "fecha" ? formatearFecha(campo.valor) : (campo.valor || "")}"
+                    ${campo.requerido ? "required" : ""}
                 >
             `;
         }
@@ -742,15 +743,18 @@ document
             [
                 {
                     id:"Nombre",
-                    label:"Nombre"
+                    label:"Nombre",
+                    requerido: true
                 },
                 {
                     id:"Apellido_Paterno",
-                    label:"Apellido Paterno"
+                    label:"Apellido Paterno",
+                    requerido: true
                 },
                 {
                     id:"Apellido_Materno",
-                    label:"Apellido Materno"
+                    label:"Apellido Materno",
+                    requerido: true
                 },
                 {
                     id:"GrupoId_Grupo",
@@ -758,7 +762,8 @@ document
                 },
                 {
                     id:"Fecha_nacimiento",
-                    label:"Fecha Nacimiento"
+                    label:"Fecha Nacimiento",
+                    requerido: true
                 }
             ],
 
