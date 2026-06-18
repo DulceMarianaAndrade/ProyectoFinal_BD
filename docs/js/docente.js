@@ -1351,13 +1351,13 @@ document
                         { id: "Calificacion", label: "Calificación", valor: calificacion.Calificacion }
                     ],
                     async (datosModificados) => {
-                        const response = await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
+                        const responsePut = await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                             method: "PUT",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
-                        const data = await response.json();
-                        if (!response.ok) {
+                        const data = await responsePut.json();
+                        if (!responsePut.ok) {
                             mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
                             return; 
                         }
