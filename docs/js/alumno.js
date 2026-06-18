@@ -384,7 +384,7 @@ async function cargarAvisos() {
                     <td>${aviso.DocenteId_Docente}</td>
                     <td>${aviso.Titulo}</td>
                     <td>${aviso.Mensaje}</td>
-                    <td>${aviso.Fecha}</td>
+                    <td>${mostrarFecha(aviso.Fecha)}</td>
                     <td>${aviso.Categoria}</td>
                 </tr>
             `;
@@ -430,7 +430,7 @@ async function cargarCitas() {
                     <td>${cita.DocenteId_Docente}</td>
                     <td>${cita.TutorId_Tutor}</td>
                     <td>${cita.Hora}</td>
-                    <td>${cita.Fecha}</td>
+                    <td>${mostrarFecha(cita.Fecha)}</td>
                     <td>${cita.Estado}</td>
                 </tr>
             `;
@@ -491,7 +491,7 @@ async function cargarRegistros() {
                     <td>${registro.AlumnoId_Alumno}</td>
                     <td>${registro.Comportamiento}</td>
                     <td>${registro.Asistencia}</td>
-                    <td>${registro.Fecha}</td>
+                    <td>${mostrarFecha(registro.Fecha)}</td>
                     <td>${registro.Observacion || ""}</td>
                 </tr>
             `;
