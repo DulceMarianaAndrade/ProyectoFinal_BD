@@ -261,7 +261,7 @@ async function cargarAlumnos() {
                     <td>${alumno.Nombre}</td>
                     <td>${alumno.Apellido_Paterno}</td>
                     <td>${alumno.Apellido_Materno || ""}</td>
-                    <td>${alumno.Fecha_nacimiento || ""}</td>
+                    <td>${mostrarFecha(alumno.Fecha_nacimiento)}</td>
                 </tr>
             `;
 
