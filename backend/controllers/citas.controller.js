@@ -30,19 +30,19 @@ exports.getCita = async (req, res) => {
 exports.createCita = async (req, res) => {
     try {
         const { Fecha, Hora, TutorId_Tutor, DocenteId_Docente } = req.body;
+        const hoy = new Date().toISOString().split("T")[0];
+        if (Fecha < hoy) {
+            return res.status(400).json({ message: "La fecha de la cita no puede ser en el pasado" });
+        }
+        if( Hora < "08:00" || Hora > "13:00" ){
+            return res.status(400).json({
+                message: "La hora debe estar entre 08:00 y 13:00"
+            });
+        }
         const [result] = await db.query(
             "INSERT INTO Cita (Fecha, Hora, TutorId_Tutor, DocenteId_Docente, Estado) VALUES (?, ?, ?, ?, ?)",
             [Fecha, Hora, TutorId_Tutor || 1, DocenteId_Docente || 1, "No agendada"]
         );
-        if (
-            Hora < "08:00" ||
-            Hora > "13:00"
-        ){
-            return res.status(400).json({
-                message:
-                "La hora debe estar entre 08:00 y 13:00"
-            });
-        }
         res.status(201).json({ id: result.insertId, message: "Cita creada exitosamente" });
     } catch (error) {
         console.error(error);
