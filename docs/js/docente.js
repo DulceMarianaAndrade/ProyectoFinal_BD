@@ -662,6 +662,38 @@ function mostrarFecha(fecha) {
     return new Date(fecha).toLocaleDateString("es-MX");
 }
 
+function mostrarAlerta(mensaje, tipo = "exito") {
+    // Crea un elemento <div> nuevo en la página
+    const alerta = document.createElement("div");
+
+    // Le pone el texto del mensaje
+    alerta.textContent = mensaje;
+
+    // Le da estilo con JavaScript (posición, colores, etc.)
+    alerta.style.position = "fixed";
+    alerta.style.top = "20px";
+    alerta.style.right = "20px";
+    alerta.style.padding = "1rem 1.5rem";
+    alerta.style.borderRadius = "8px";
+    alerta.style.color = "#fff";
+    alerta.style.fontWeight = "600";
+    alerta.style.zIndex = "9999";
+    alerta.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+
+    // Si tipo es "exito" se pone verde, si no, rojo
+    alerta.style.background = tipo === "exito" ? "#22c55e" : "#e53e3e";
+
+    // Agrega la cajita a la página para que se vea
+    document.body.appendChild(alerta);
+
+    // Después de 2.5 segundos, la quita poco a poco y la elimina
+    setTimeout(() => {
+        alerta.style.opacity = "0";
+        alerta.style.transition = "opacity 0.3s";
+        setTimeout(() => alerta.remove(), 300);
+    }, 2500);
+}
+
 function abrirModal(titulo, campos, callback, noAutoCerrar = false) {
     modalTitulo.textContent = titulo;
     camposModal.innerHTML = "";
@@ -783,6 +815,12 @@ document
                         )
                     }
                 );
+                const data = await response.json();
+                if (!response.ok) {
+                    mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                    return; 
+                }
+                mostrarAlerta(data.message, "exito");
                 cargarAlumnos();
             }
         );
@@ -815,6 +853,12 @@ document
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify(datosModificados)
                             });
+                            const data = await response.json();
+                            if (!response.ok) {
+                                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                                return; 
+                            }
+                            mostrarAlerta(data.message, "exito");
                             cargarAlumnos();
                         }
                     );
@@ -839,6 +883,12 @@ document
                 await fetch(`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
                     method: "DELETE"
                 });
+                const data = await response.json();
+                if (!response.ok) {
+                    mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                    return; 
+                }
+                mostrarAlerta(data.message, "exito");
                 cargarAlumnos();
             }
         );
@@ -865,6 +915,12 @@ document.getElementById("btnNuevoDocente")
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarDocentes();
         }
     );
@@ -896,6 +952,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarDocentes();
                     }
                 );
@@ -920,6 +982,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarDocentes();
         }
     );
@@ -946,6 +1014,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarTutores();
         }
     );
@@ -976,6 +1050,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarTutores();
                     }
                 );
@@ -1000,6 +1080,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarTutores();
         }
     );
@@ -1026,6 +1112,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarGrupos();
         }
     );
@@ -1056,6 +1148,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarGrupos();
                     }
                 );
@@ -1080,6 +1178,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarGrupos();
         }
     );
@@ -1107,6 +1211,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarMaterias();
         }
     );
@@ -1135,6 +1245,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarMaterias();
                     }
                 );
@@ -1159,6 +1275,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarMaterias();
         }
     );
@@ -1194,6 +1316,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarCalificaciones();
         }
     );
@@ -1228,6 +1356,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarCalificaciones();
                     }
                 );
@@ -1256,6 +1390,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarCalificaciones();
         }
     );
@@ -1303,7 +1443,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
-
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarAvisos();
         }
     );
@@ -1337,6 +1482,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarAvisos();
                     }
                 );
@@ -1361,6 +1512,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarAvisos();
         }
     );
@@ -1410,6 +1567,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarCitas();
         }
     );
@@ -1448,6 +1611,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarCitas();
                     }
                 );
@@ -1472,6 +1641,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarCitas();
         }
     );
@@ -1523,6 +1698,12 @@ document
                     body:JSON.stringify(datos)
                 }
             );
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarRegistros();
         }
     );
@@ -1560,6 +1741,12 @@ document
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(datosModificados)
                         });
+                        const data = await response.json();
+                        if (!response.ok) {
+                            mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                            return; 
+                        }
+                        mostrarAlerta(data.message, "exito");
                         cargarRegistros();
                     }
                 );
@@ -1584,6 +1771,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarRegistros();
         }
     );
@@ -1604,6 +1797,12 @@ document
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datos)
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarRepresentar();
         }
     );
@@ -1634,6 +1833,12 @@ document
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(datosModificados)
                     });
+                    const data = await response.json();
+                    if (!response.ok) {
+                        mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                        return; 
+                    }
+                    mostrarAlerta(data.message, "exito");
                     cargarRepresentar();
                 }
             );
@@ -1658,6 +1863,12 @@ document
             await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
                 method: "DELETE"
             });
+            const data = await response.json();
+            if (!response.ok) {
+                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
+                return; 
+            }
+            mostrarAlerta(data.message, "exito");
             cargarRepresentar();
         }
     );
