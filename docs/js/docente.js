@@ -880,15 +880,9 @@ document
             async (datos) => {
                 const id = datos.Id_Alumno;
                 if (!id) return;
-                const response = await fetch (`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
+                await fetch (`https://proyectofinal-bd.onrender.com/api/alumnos/${id}`, {
                     method: "DELETE"
                 });
-                const data = await response.json();
-                if (!response.ok) {
-                    mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                    return; 
-                }
-                mostrarAlerta(data.message, "exito");
                 cargarAlumnos();
             }
         );
@@ -979,15 +973,9 @@ document
         async (datos) => {
             const id = datos.Id_Docente;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/docentes/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarDocentes();
         }
     );
@@ -1077,15 +1065,9 @@ document
         async (datos) => {
             const id = datos.Id_Tutor;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/tutores/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarTutores();
         }
     );
@@ -1175,15 +1157,9 @@ document
         async (datos) => {
             const id = datos.Id_Grupo;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/grupos/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarGrupos();
         }
     );
@@ -1272,15 +1248,9 @@ document
         async (datos) => {
             const id = datos.Id_Materia;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/materias/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarMaterias();
         }
     );
@@ -1387,15 +1357,9 @@ document
             const alumno = datos.AlumnoId_Alumno;
             const materia = datos.MateriaId_Materia;
             if (!alumno || !materia) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/calificaciones/${alumno}/${materia}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarCalificaciones();
         }
     );
@@ -1509,15 +1473,9 @@ document
         async (datos) => {
             const id = datos.Id_Aviso;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/avisos/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarAvisos();
         }
     );
@@ -1638,15 +1596,9 @@ document
         async (datos) => {
             const id = datos.Id_Cita;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/citas/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarCitas();
         }
     );
@@ -1768,15 +1720,9 @@ document
         async (datos) => {
             const id = datos.Id_Registro;
             if (!id) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/registros/${id}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarRegistros();
         }
     );
@@ -1860,15 +1806,9 @@ document
             const tutorId = datos.TutorId_Tutor;
             const alumnoId = datos.AlumnoId_Alumno;
             if (!tutorId || !alumnoId) return;
-            const response = await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
+            await fetch(`https://proyectofinal-bd.onrender.com/api/representar/${tutorId}/${alumnoId}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
-            if (!response.ok) {
-                mostrarAlerta(data.message, "error"); // mostramos el mensaje en rojo
-                return; 
-            }
-            mostrarAlerta(data.message, "exito");
             cargarRepresentar();
         }
     );
